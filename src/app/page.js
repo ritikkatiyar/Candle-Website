@@ -19,22 +19,33 @@ export default function Home() {
       </section>
 
       {/* Featured Collections */}
-      <section className="py-16 text-center">
-        <h2 className="text-3xl font-bold">Featured Collections</h2>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {[
-            { name: "Rosette Radiance", price: "$30.00", image: "/hero.JPG" },
-            { name: "Supreme Essence", price: "$30.00", image: "/candle2.jpg" },
-            { name: "Candie", price: "$30.00", image: "/candle3.jpg" },
-          ].map((item, index) => (
-            <div key={index} className="bg-white p-4 shadow-lg rounded-lg">
-              <Image src={item.image} alt={item.name} width={300} height={300} className="rounded-lg" />
-              <h3 className="mt-4 text-xl font-semibold">{item.name}</h3>
-              <p className="text-gray-600">{item.price}</p>
-            </div>
-          ))}
+      <section className="py-12 text-center">
+  <h2 className="text-2xl sm:text-3xl font-bold">Featured Collections</h2>
+  
+  {/* Scrollable container for mobile */}
+  <div className="mt-8 overflow-x-auto">
+    <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 sm:px-0">
+      {[
+        { name: "Rosette Radiance", price: "$30.00", image: "/hero.JPG" },
+        { name: "Supreme Essence", price: "$30.00", image: "/hero.JPG" },
+        { name: "Candie", price: "$30.00", image: "/hero.JPG" },
+      ].map((item, index) => (
+        <div key={index} className="bg-white p-4 shadow-lg rounded-lg min-w-[250px] sm:w-auto">
+          <Image
+            src={item.image}
+            alt={item.name}
+            width={300}
+            height={300}
+            className="rounded-lg w-full h-auto"
+          />
+          <h3 className="mt-4 text-lg sm:text-xl font-semibold">{item.name}</h3>
+          <p className="text-gray-600 text-sm sm:text-base">{item.price}</p>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
+
 
       {/* Why Choose Us */}
       <section className="py-16 text-center bg-white">
