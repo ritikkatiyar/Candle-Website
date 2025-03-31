@@ -6,7 +6,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative w-full h-screen flex items-center justify-center text-center text-white bg-black">
         <Image
-          src="/hero.jpg"
+          src="/hero.JPG"
           alt="Candles"
           layout="fill"
           objectFit="cover"
@@ -14,7 +14,7 @@ export default function Home() {
         />
         <div className="relative z-10">
           <h1 className="text-5xl md:text-6xl font-6xl">Handcrafted Candles for Every Moment</h1>
-          <button className="mt-6 px-6 py-3 bg-black text-white border border-white rounded-full hover:bg-white hover:text-black">Shop Now</button>
+          <button className="mt-6 px-6 py-3 text-white border border-white rounded-full hover:bg-white hover:text-black">Shop Now</button>
         </div>
       </section>
 
@@ -23,7 +23,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold">Featured Collections</h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {[
-            { name: "Rosette Radiance", price: "$30.00", image: "/hero.jpg" },
+            { name: "Rosette Radiance", price: "$30.00", image: "/hero.JPG" },
             { name: "Supreme Essence", price: "$30.00", image: "/candle2.jpg" },
             { name: "Candie", price: "$30.00", image: "/candle3.jpg" },
           ].map((item, index) => (
