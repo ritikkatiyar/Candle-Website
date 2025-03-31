@@ -23,7 +23,7 @@ export default function Home() {
         <h2 className="text-3xl font-bold">Featured Collections</h2>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {[
-            { name: "Rosette Radiance", price: "$30.00", image: "/candle1.jpg" },
+            { name: "Rosette Radiance", price: "$30.00", image: "/hero.jpg" },
             { name: "Supreme Essence", price: "$30.00", image: "/candle2.jpg" },
             { name: "Candie", price: "$30.00", image: "/candle3.jpg" },
           ].map((item, index) => (
