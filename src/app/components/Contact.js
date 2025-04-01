@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ContactModal({ isOpen, onClose }) {
+export default function Contact({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -13,13 +13,26 @@ export default function ContactModal({ isOpen, onClose }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Your message has been sent! 🕯️");
-    setFormData({ name: "", mobile: "", message: "" });
-    onClose(); // Close modal after submission
+    const response = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+  
+    const data = await response.json(); // Get response from the backend
+    console.log("Server Response:", data); // Log it to check
+  
+    if (response.ok) {
+      alert("Your message has been sent! 🕯️");
+      setFormData({ name: "", mobile: "", message: "" });
+      onClose();
+    } else {
+      alert(`Failed to send message: ${data.error || "Unknown error"}`);
+    }
   };
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-yellow bg-opacity-50 backdrop-blur-sm px-4">
