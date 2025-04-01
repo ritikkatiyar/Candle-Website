@@ -1,10 +1,10 @@
 import Image from "next/image";
 
 const products = [
-  { name: "Single Luxury Candle", price: "₹399 – ₹499", offer: "Buy 1, Get 1 at 50% Off", image: "/hero.jpg" },
-  { name: "Candle Gift Box", price: "₹1,299 – ₹1,499", offer: "Exclusive Festive Combo", image: "/hero.jpg" },
-  { name: "Limited Edition Candle", price: "₹699 – ₹899", offer: "Free Personalization", image: "/hero.jpg" },
-  { name: "DIY Candle-Making Kit", price: "₹799 – ₹999", offer: "Create Your Own Scent", image: "/hero.jpg" },
+  { name: "Single Luxury Candle", price: "₹399 – ₹499", offer: "Buy 1, Get 1 at 50% Off", image: "/hero.JPG" },
+  { name: "Candle Gift Box", price: "₹1,299 – ₹1,499", offer: "Exclusive Festive Combo", image: "/hero.JPG" },
+  { name: "Limited Edition Candle", price: "₹699 – ₹899", offer: "Free Personalization", image: "/hero.JPG" },
+  { name: "DIY Candle-Making Kit", price: "₹799 – ₹999", offer: "Create Your Own Scent", image: "/hero.JPG" },
 ];
 
 export default function FeaturedProducts({ refProp }) {
