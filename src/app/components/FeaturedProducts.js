@@ -27,7 +27,7 @@ export default function FeaturedProducts({ refProp }) {
             <div className="text-left">
               <h3 className="text-lg sm:text-xl font-2xl">{item.name}</h3>
               <p className="text-gray-600 text-sm sm:text-base">{item.price}</p>
-              <p className="text-sm text-green-500">{item.offer}</p>
+              <p className="text-sm text-blue-500">{item.offer}</p>
               {/* Popup Component */}
               <button className="mt-3 px-4 py-2 bg-[#2a2925] text-white rounded-md hover:bg-gray-800 transition duration-300"
               onClick={()=>setPopupOpen(true)}>

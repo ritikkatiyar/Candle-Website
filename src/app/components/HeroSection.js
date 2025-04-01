@@ -5,24 +5,26 @@ const HeroSection = ({ onShopNowClick }) => {
   return (
     <div className="font-serif bg-[#FAF7F2] text-gray-900">
           {/* Hero Section */}
-          <section className="relative w-full h-[60vh] sm:h-screen flex items-center justify-center text-center text-white bg-black">
-      <Image
-        src="/hero.JPG"
-        alt="Candles"
-        layout="fill"
-        objectFit="cover"
-        objectPosition="center top"
-        className="opacity-70"
-      />
-      <div className="relative z-10 px-4">
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-3xl">
-          Handcrafted Candles for Every Moment
-        </h1>
-        <button onClick={onShopNowClick} className="mt-6 px-6 py-3 bg-text-white border border-white rounded-full hover:bg-white hover:text-black">
-          Shop Now
-        </button>
-      </div>
-    </section>
+          <section className="relative w-full h-[60vh] sm:h-screen flex items-center justify-center text-center text-white bg-black px-4">
+  <Image
+    src="/hero.JPG"
+    alt="Candles"
+    layout="fill"
+    objectFit="cover"
+    objectPosition="center"
+    className="opacity-70"
+  />
+  <div className="relative z-10">
+    <h1 className="text-3xl sm:text-5xl md:text-6xl font-semibold">
+      Handcrafted Candles for Every Moment
+    </h1>
+    <button onClick={onShopNowClick} className="mt-6 px-6 py-3 bg-white text-black border border-white rounded-full hover:bg-gray-100 hover:text-black
+    cursor-pointer">
+      Shop Now
+    </button>
+  </div>
+</section>
+
     
     
           {/* Featured Collections */}
