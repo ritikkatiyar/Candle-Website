@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Contact from "./Contact";
+import { useState } from "react";
 
 const products = [
   { name: "Single Luxury Candle", price: "₹399 – ₹499", offer: "Buy 1, Get 1 at 50% Off", image: "/hero.JPG" },
@@ -8,6 +10,7 @@ const products = [
 ];
 
 export default function FeaturedProducts({ refProp }) {
+    const [isPopupOpen, setPopupOpen] = useState(false);
   return (
     <section ref={refProp} className="py-12 text-center bg-[#f9f6f1] text-gray-900">
       <h2 className="text-2xl sm:text-3xl font-bold">Featured Collections</h2>
@@ -25,13 +28,17 @@ export default function FeaturedProducts({ refProp }) {
               <h3 className="text-lg sm:text-xl font-2xl">{item.name}</h3>
               <p className="text-gray-600 text-sm sm:text-base">{item.price}</p>
               <p className="text-sm text-green-500">{item.offer}</p>
-              <button className="mt-3 px-4 py-2 bg-[#2a2925] text-white rounded-md hover:bg-gray-800 transition duration-300">
+              {/* Popup Component */}
+              <button className="mt-3 px-4 py-2 bg-[#2a2925] text-white rounded-md hover:bg-gray-800 transition duration-300"
+              onClick={()=>setPopupOpen(true)}>
                 Shop Now
               </button>
             </div>
           </div>
         ))}
       </div>
+      
+      <Contact isOpen={isPopupOpen} onClose={() => setPopupOpen(false)} />
     </section>
   );
 }
