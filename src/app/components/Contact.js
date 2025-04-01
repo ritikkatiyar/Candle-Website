@@ -22,8 +22,8 @@ export default function ContactModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-yellow bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-96 relative">
+    <div className="fixed inset-0 flex items-center justify-center bg-yellow bg-opacity-50 backdrop-blur-sm px-4">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md sm:max-w-lg relative transform transition-all scale-95 sm:scale-100">
         {/* Close Button */}
         <button onClick={onClose} className="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
           ✖
@@ -44,8 +44,8 @@ export default function ContactModal({ isOpen, onClose }) {
           />
 
           <input
-            type="email"
-            name="email"
+            type="tel"
+            name="mobile" // ✅ Fixed name attribute
             placeholder="Your Phone No"
             value={formData.mobile}
             onChange={handleChange}
@@ -55,7 +55,7 @@ export default function ContactModal({ isOpen, onClose }) {
 
           <textarea
             name="message"
-            placeholder="Your Message"
+            placeholder="Your Address"
             value={formData.message}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 h-28"
