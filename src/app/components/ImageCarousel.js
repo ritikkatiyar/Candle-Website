@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 
 const images = [
-  { src: "/candle1.jpg", description: "Relaxing lavender-scented candle." },
-  { src: "/candle2.jpg", description: "Elegant vanilla bean fragrance." },
-  { src: "/candle3.jpg", description: "Soothing sandalwood essence." },
-];
+  { src: "/candle1.JPG", description: "Relaxing lavender-scented candle." },
+  { src: "/candle2.JPG", description: "Elegant vanilla bean fragrance." },
+  { src: "/candle3.JPG", description: "Soothing sandalwood essence." },
+]
 
 export default function ImageCarousel() {
   const [index, setIndex] = useState(0);
