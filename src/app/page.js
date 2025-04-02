@@ -4,6 +4,8 @@ import { useRef } from "react";
 import FeaturedProducts from "./components/FeaturedProducts";
 import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
+import ImageCarousel from "./components/ImageCarousel";
+
 
 export default function Home() {
   const featuredRef = useRef(null);
@@ -15,8 +17,10 @@ export default function Home() {
   };
   return (
     <>
+
     <Navbar/>
     <HeroSection onShopNowClick={scrollToFeatured}/>
+    <ImageCarousel/>
     <FeaturedProducts refProp={featuredRef}/>
     </>
     

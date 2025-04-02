@@ -1,127 +1,119 @@
-"use client";
-
 import { useState } from "react";
-import Link from "next/link";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { Menu, X, ChevronDown } from "lucide-react"; // Install using: npm install lucide-react
 
-const Navbar = () => {
+const navItems = [
+  { name: "Home", link: "/" },
+  {
+    name: "Products",
+    subMenu: [
+      { name: "All Products", link: "#" },
+      { name: "Candles", link: "#" },
+      { name: "Diffusers", link: "#" },
+      { name: "Gift Cards", link: "#" },
+    ],
+  },
+  { name: "About", link: "#" },
+  { name: "Contact", link: "#" },
+];
+
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleNavbar = () => setIsOpen(!isOpen);
-
-  const menuItems = [
-    { name: "Home", link: "/" },
-    {
-      name: "Products",
-      subMenu: [
-        { name: "All Products", link: "#" },
-        { name: "Candles", link: "#" },
-        { name: "Diffusers", link: "#" },
-        { name: "Gift Cards", link: "#" },
-      ],
-    },
-    { name: "About", link: "#" },
-    { name: "Contact", link: "#" },
-  ];
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   return (
-    <nav className="bg-white fixed top-0 left-0 w-full shadow-md z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="sm:text-2xl md:text-3xl lg:text-4xl text-black tracking-wide">
-            ANAYA CANDLES
-          </Link>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-opacity-50 backdrop-blur-lg shadow-md">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        {/* Logo */}
+        <a href="#" className="text-black text-2xl font-bold flex items-center">
+          <span className="bg-rose-600 text-white px-2 py-1 rounded-md">A</span>NAYA CANDLES
+        </a>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-6">
-            {menuItems.map((item, index) => (
-              <div key={index} className="relative group">
-                {item.subMenu ? (
-                  <>
-                    <button className="text-black text-xl font-medium hover:text-gray-400 focus:outline-none">
-                      {item.name}
-                    </button>
-                    {/* Dropdown on Hover */}
-                    <div
-                      className="absolute left-0 mt-2 bg-white border shadow-lg rounded-lg w-48 z-50 opacity-0 group-hover:opacity-100 group-hover:visible transition-opacity duration-300"
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-8 text-black ">
+          {navItems.map((item, index) => (
+            <div key={index} className="relative group">
+              <a
+                href={item.link || "#"}
+                className="hover:underline flex items-center"
+              >
+                {item.name}
+                {item.subMenu && <ChevronDown size={18} className="ml-1" />}
+              </a>
+
+              {/* Dropdown Menu (Only for items with subMenu) */}
+              {item.subMenu && (
+                <div className="absolute left-0 mt-2 bg-white text-black shadow-lg rounded-lg py-2 w-48 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  {item.subMenu.map((subItem, subIndex) => (
+                    <a
+                      key={subIndex}
+                      href={subItem.link}
+                      className="block px-4 py-2 hover:bg-gray-100"
                     >
-                      {item.subMenu.map((subItem, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subItem.link}
-                          className="block px-4 py-2 text-black hover:bg-gray-200"
-                        >
-                          {subItem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <Link
-                    href={item.link}
-                    className="text-black text-xl font-medium hover:text-gray-400"
-                  >
-                    {item.name}
-                  </Link>
-                )}
-              </div>
-            ))}
-          </div>
+                      {subItem.name}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 rounded-full bg-white text-black"
-            onClick={toggleNavbar}
-          >
-            {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        {/* CTA Button */}
+        <div className="hidden md:flex space-x-4">
+          <button className="text-black">Log in</button>
+          <button className="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm transition-transform hover:scale-105">
+            Start free trial
           </button>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-white"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          transition={{ duration: 0.3 }}
-          className="md:hidden bg-white border-t"
-        >
-          {menuItems.map((item, index) => (
+        <div className="md:hidden absolute top-16 left-0 w-full bg-black bg-opacity-80 text-white flex flex-col space-y-4 p-6">
+          {navItems.map((item, index) => (
             <div key={index}>
-              {item.subMenu ? (
-                <>
-                  <button
-                    className="w-full text-left text-black text-xl font-medium hover:bg-gray-700 px-4 py-2"
-                  >
-                    {item.name}
-                  </button>
-                  {/* Mobile Dropdown */}
+              <div
+                className="flex justify-between items-center cursor-pointer"
+                onClick={() =>
+                  setOpenDropdown(openDropdown === index ? null : index)
+                }
+              >
+                <a href={item.link} className="hover:underline">
+                  {item.name}
+                </a>
+                {item.subMenu && <ChevronDown size={18} />}
+              </div>
+
+              {/* Submenu for Mobile */}
+              {item.subMenu && openDropdown === index && (
+                <div className="ml-4 mt-2 space-y-2">
                   {item.subMenu.map((subItem, subIndex) => (
-                    <Link
+                    <a
                       key={subIndex}
                       href={subItem.link}
-                      className="block px-4 py-2 text-black hover:bg-gray-200"
+                      className="block hover:underline"
                     >
                       {subItem.name}
-                    </Link>
+                    </a>
                   ))}
-                </>
-              ) : (
-                <Link
-                  href={item.link}
-                  className="block px-4 py-2 text-black hover:bg-gray-200"
-                >
-                  {item.name}
-                </Link>
+                </div>
               )}
             </div>
           ))}
-        </motion.div>
+          <button className="text-white mt-4">Log in</button>
+          <button className="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm">
+            Start free trial
+          </button>
+        </div>
       )}
     </nav>
   );
-};
-
-export default Navbar;
+}

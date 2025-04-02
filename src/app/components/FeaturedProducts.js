@@ -3,10 +3,10 @@ import Contact from "./Contact";
 import { useState } from "react";
 
 const products = [
-  { name: "Single Luxury Candle", price: "₹399 – ₹499", offer: "Buy 1, Get 1 at 50% Off", image: "/hero.JPG" },
-  { name: "Candle Gift Box", price: "₹1,299 – ₹1,499", offer: "Exclusive Festive Combo", image: "/hero.JPG" },
-  { name: "Limited Edition Candle", price: "₹699 – ₹899", offer: "Free Personalization", image: "/hero.JPG" },
-  { name: "DIY Candle-Making Kit", price: "₹799 – ₹999", offer: "Create Your Own Scent", image: "/hero.JPG" },
+  { name: "Single Luxury Candle", price: "₹399 – ₹499", offer: "Buy 1, Get 1 at 50% Off", image: "/candle1.JPG" },
+  { name: "Candle Gift Box", price: "₹1,299 – ₹1,499", offer: "Exclusive Festive Combo", image: "/candle2.JPG" },
+  { name: "Limited Edition Candle", price: "₹699 – ₹899", offer: "Free Personalization", image: "/candle3.JPG" },
+  { name: "DIY Candle-Making Kit", price: "₹799 – ₹999", offer: "Create Your Own Scent", image: "/candle4.JPG" },
 ];
 
 export default function FeaturedProducts({ refProp }) {
