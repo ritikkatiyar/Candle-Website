@@ -5,6 +5,7 @@ import FeaturedProducts from "./components/FeaturedProducts";
 import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
 import ImageCarousel from "./components/ImageCarousel";
+import Content from "./components/Content";
 
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
     <HeroSection onShopNowClick={scrollToFeatured}/>
     <ImageCarousel/>
     <FeaturedProducts refProp={featuredRef}/>
+    <Content/>
     </>
     
   );
