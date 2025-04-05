@@ -6,6 +6,7 @@ import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
 import ImageCarousel from "./components/ImageCarousel";
 import Content from "./components/Content";
+import Footer from "./components/Footer";
 
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
     <ImageCarousel/>
     <FeaturedProducts refProp={featuredRef}/>
     <Content/>
+    <Footer/>
     </>
     
   );
