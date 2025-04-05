@@ -45,7 +45,7 @@ export default function Content() {
           </p>
         </motion.div>
         <Image
-          src="/story.JPEG"
+          src="/story.jpeg"
           alt="Our Story"
           width={500}
           height={400}

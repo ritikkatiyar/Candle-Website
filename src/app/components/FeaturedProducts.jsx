@@ -7,13 +7,13 @@ const products = [
     name: "Single Luxury Candle",
     price: "₹1299",
     offer: "Buy 1, Get 1 at 50% Off",
-    image: "/single-luxury.JPEG",
+    image: "/single-luxury.jpeg",
   },
   {
     name: "Candle Gift Box",
     price: "₹1,299 – ₹1,499",
     offer: "Exclusive Festive Combo",
-    image: "/gift-box.JPEG",
+    image: "/gift-box.jpeg",
   },
   {
     name: "Limited Edition Candle",
