@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Contact from "./Contact";
-import { useState } from "react";
+
 
 const products = [
   {
@@ -29,8 +29,8 @@ const products = [
   },
 ];
 
-export default function FeaturedProducts({ refProp }) {
-  const [isPopupOpen, setPopupOpen] = useState(false);
+export default function FeaturedProducts({refProp}) {
+
 
   return (
     <section
@@ -60,17 +60,17 @@ export default function FeaturedProducts({ refProp }) {
             <p className="text-yellow-400 text-sm italic">{item.offer}</p>
 
             <button
-              className="mt-4 px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-400 text-black font-medium rounded-full hover:from-yellow-400 hover:to-orange-300 transition-all duration-300"
-              onClick={() => setPopupOpen(true)}
-            >
-              🛍️ Shop Now
-            </button>
+  className="mt-4 px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-400 text-black font-medium rounded-full hover:from-yellow-400 hover:to-orange-300 transition-all duration-300"
+  onClick={() => window.open("https://wa.me/c/919140206166", "_blank")}
+>
+  🛍️ Shop Now
+</button>
+
           </div>
         ))}
       </div>
 
-      {/* Contact Popup */}
-      <Contact isOpen={isPopupOpen} onClose={() => setPopupOpen(false)} />
+
     </section>
   );
 }

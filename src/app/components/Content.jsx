@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useState } from "react";
+import Contact from './Contact';
 
 const features = [
   "✨ Eco-Friendly Wax – Made with sustainable, toxin-free ingredients.",
@@ -17,8 +19,11 @@ const collections = [
 ];
 
 export default function Content() {
+  const [isPopupOpen, setPopupOpen] = useState(false);
+
   return (
-    <main className="bg-[#0d0d0d] text-white px-4 sm:px-6 md:px-12 lg:px-20 py-12 space-y-16">
+    <main className="bg-[#0d0d0d] text-white px-4 sm:px-6 md:px-12 lg:px-20 py-12 space-y-16" >
+      
       {/* Title */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -119,9 +124,24 @@ export default function Content() {
       <section className="text-center space-y-6">
         <p className="text-xl">✨ Let’s Create Something Beautiful Together!</p>
         <div className="flex justify-center gap-4 flex-wrap">
-          <a href="#" className="px-6 py-3 bg-yellow-400 text-black rounded-lg hover:scale-105 transition">🛒 Shop Now</a>
-          <a href="#" className="px-6 py-3 border border-yellow-400 text-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition">📩 Contact Us</a>
+          <a
+            className="px-6 py-3 bg-yellow-400 text-black rounded-lg hover:scale-105 transition"
+            href="https://wa.me/c/919140206166"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            🛒 Shop Now
+          </a>
+          <a
+            className="px-6 py-3 border border-yellow-400 text-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition cursor-pointer"
+            onClick={() => setPopupOpen(true)}
+          >
+            📩 Contact Us
+          </a>
         </div>
+
+        {/* Contact Popup */}
+        <Contact isOpen={isPopupOpen} onClose={() => setPopupOpen(false)} />
       </section>
     </main>
   );
