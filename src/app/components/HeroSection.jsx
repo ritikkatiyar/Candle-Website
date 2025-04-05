@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const images = ["/main4.jpeg", "/main3.jpeg"];
 
 const products = [
-  { name: "Rosette Radiance", price: "₹240.00", image: "/main1.jpg" },
-  { name: "Supreme Essence", price: "₹40.00", image: "/main2.jpg" },
-  { name: "Candie", price: "₹300.00", image: "/main3.jpg" },
+  { name: "Rosette Radiance", price: "₹249.00", image: "/main1.jpg" },
+  { name: "Supreme Essence", price: "₹349.00", image: "/supreme.JPEG" },
+  { name: "Candie", price: "₹149.00", image: "/candie.JPEG" },
 ];
 
 const HeroSection = ({ onShopNowClick }) => {
@@ -76,25 +76,26 @@ const HeroSection = ({ onShopNowClick }) => {
           ✨ Featured Collections
         </h2>
 
-        <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto overflow-x-auto pb-4">
-          {products.map((item, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.05 }}
-              className="bg-white/10 backdrop-blur-md border border-white/20 text-white p-5 rounded-2xl shadow-xl min-w-[250px] sm:w-auto"
-            >
-              <Image
-                src={item.image || "/fallback.jpg"}
-                alt={item.name || "Product Image"}
-                width={400}
-                height={400}
-                className="rounded-xl w-full h-60 object-cover"
-              />
-              <h3 className="mt-4 text-xl font-semibold">{item.name}</h3>
-              <p className="text-gray-300 text-base">{item.price}</p>
-            </motion.div>
-          ))}
-        </div>
+        <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto overflow-x-auto pb-4 hide-scrollbar">
+  {products.map((item, index) => (
+    <motion.div
+      key={index}
+      whileHover={{ scale: 1.05 }}
+      className="bg-white/10 backdrop-blur-md border border-white/20 text-white p-5 rounded-2xl shadow-xl min-w-[250px] sm:w-auto"
+    >
+      <Image
+        src={item.image || "/fallback.jpg"}
+        alt={item.name || "Product Image"}
+        width={400}
+        height={400}
+        className="rounded-xl w-full h-60 object-cover"
+      />
+      <h3 className="mt-4 text-xl font-semibold">{item.name}</h3>
+      <p className="text-gray-300 text-base">{item.price}</p>
+    </motion.div>
+  ))}
+</div>
+
       </section>
     </div>
   );

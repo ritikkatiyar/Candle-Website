@@ -5,15 +5,15 @@ import { useState } from "react";
 const products = [
   {
     name: "Single Luxury Candle",
-    price: "₹399 – ₹499",
+    price: "₹1299",
     offer: "Buy 1, Get 1 at 50% Off",
-    image: "/candle1.JPG",
+    image: "/single-luxury.JPEG",
   },
   {
     name: "Candle Gift Box",
     price: "₹1,299 – ₹1,499",
     offer: "Exclusive Festive Combo",
-    image: "/candle2.JPG",
+    image: "/gift-box.JPEG",
   },
   {
     name: "Limited Edition Candle",

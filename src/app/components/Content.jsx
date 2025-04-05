@@ -13,7 +13,7 @@ const collections = [
   { name: "Aroma Therapy", img: "/aroma.jpeg", desc: "Infused with calming essential oils." },
   { name: "Eco-Friendly", img: "/eco.jpeg", desc: "Upcycled coconut shell & soy wax candles." },
   { name: "Luxury", img: "/luxury.JPG", desc: "Premium handcrafted elegance." },
-  { name: "Festive", img: "/festive.JPG", desc: "Perfect for Diwali, Christmas & more." },
+  { name: "Festive", img: "/candle3.JPG", desc: "Perfect for Diwali, Christmas & more." },
 ];
 
 export default function Content() {
@@ -45,7 +45,7 @@ export default function Content() {
           </p>
         </motion.div>
         <Image
-          src="/story.jpg"
+          src="/story.JPEG"
           alt="Our Story"
           width={500}
           height={400}
@@ -119,8 +119,8 @@ export default function Content() {
       <section className="text-center space-y-6">
         <p className="text-xl">✨ Let’s Create Something Beautiful Together!</p>
         <div className="flex justify-center gap-4 flex-wrap">
-          <a href="/shop" className="px-6 py-3 bg-yellow-400 text-black rounded-lg hover:scale-105 transition">🛒 Shop Now</a>
-          <a href="/contact" className="px-6 py-3 border border-yellow-400 text-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition">📩 Contact Us</a>
+          <a href="#" className="px-6 py-3 bg-yellow-400 text-black rounded-lg hover:scale-105 transition">🛒 Shop Now</a>
+          <a href="#" className="px-6 py-3 border border-yellow-400 text-yellow-400 rounded-lg hover:bg-yellow-400 hover:text-black transition">📩 Contact Us</a>
         </div>
       </section>
     </main>
