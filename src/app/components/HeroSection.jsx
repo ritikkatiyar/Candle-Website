@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-const images = ["/main4.jpeg", "/main3.jpeg"];
+const images = ["/main4.jpeg", "/main3.jpeg","/main1.jpeg"];
 
 const products = [
   { name: "Rosette Radiance", price: "₹249.00", image: "/candle4.JPG" },
