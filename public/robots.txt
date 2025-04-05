@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://candle-sandy.vercel.app
+
+# Sitemaps
+Sitemap: https://candle-sandy.vercel.app/sitemap.xml
