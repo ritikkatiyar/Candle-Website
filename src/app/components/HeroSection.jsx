@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const images = ["/main4.jpeg", "/main3.jpeg"];
 
 const products = [
-  { name: "Rosette Radiance", price: "₹249.00", image: "/main1.jpg" },
-  { name: "Supreme Essence", price: "₹349.00", image: "/supreme.JPEG" },
-  { name: "Candie", price: "₹149.00", image: "/candie.JPEG" },
+  { name: "Rosette Radiance", price: "₹249.00", image: "/main1.JPG" },
+  { name: "Supreme Essence", price: "₹349.00", image: "/supreme.jpeg" },
+  { name: "Candie", price: "₹149.00", image: "/candie.jpeg" },
 ];
 
 const HeroSection = ({ onShopNowClick }) => {
