@@ -10,10 +10,10 @@ const features = [
 ];
 
 const collections = [
-  { name: "Aroma Therapy", img: "/aroma.jpg", desc: "Infused with calming essential oils." },
-  { name: "Eco-Friendly", img: "/eco.jpg", desc: "Upcycled coconut shell & soy wax candles." },
-  { name: "Luxury", img: "/luxury.jpg", desc: "Premium handcrafted elegance." },
-  { name: "Festive", img: "/festive.jpg", desc: "Perfect for Diwali, Christmas & more." },
+  { name: "Aroma Therapy", img: "/aroma.jpeg", desc: "Infused with calming essential oils." },
+  { name: "Eco-Friendly", img: "/eco.jpeg", desc: "Upcycled coconut shell & soy wax candles." },
+  { name: "Luxury", img: "/luxury.JPG", desc: "Premium handcrafted elegance." },
+  { name: "Festive", img: "/festive.JPG", desc: "Perfect for Diwali, Christmas & more." },
 ];
 
 export default function Content() {
