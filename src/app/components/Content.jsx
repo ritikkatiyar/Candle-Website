@@ -12,7 +12,7 @@ const features = [
 const collections = [
   { name: "Aroma Therapy", img: "/aroma.jpeg", desc: "Infused with calming essential oils." },
   { name: "Eco-Friendly", img: "/eco.jpeg", desc: "Upcycled coconut shell & soy wax candles." },
-  { name: "Luxury", img: "/luxury.JPG", desc: "Premium handcrafted elegance." },
+  { name: "Luxury", img: "/luxury.jpg", desc: "Premium handcrafted elegance." },
   { name: "Festive", img: "/candle3.JPG", desc: "Perfect for Diwali, Christmas & more." },
 ];
 

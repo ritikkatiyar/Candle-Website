@@ -25,7 +25,7 @@ const products = [
     name: "DIY Candle-Making Kit",
     price: "₹799 – ₹999",
     offer: "Create Your Own Scent",
-    image: "/candle4.JPG",
+    image: "/diy.jpeg",
   },
 ];
 

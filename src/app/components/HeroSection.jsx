@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const images = ["/main4.jpeg", "/main3.jpeg"];
 
 const products = [
-  { name: "Rosette Radiance", price: "₹249.00", image: "/main1.jpg" },
+  { name: "Rosette Radiance", price: "₹249.00", image: "/candle4.JPG" },
   { name: "Supreme Essence", price: "₹349.00", image: "/supreme.jpeg" },
   { name: "Candie", price: "₹149.00", image: "/candie.jpeg" },
 ];
