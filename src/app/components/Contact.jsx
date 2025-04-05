@@ -7,7 +7,7 @@ export default function Contact({ isOpen, onClose }) {
     message: "",
   });
 
-  if (!isOpen) return null; // Hide modal when not open
+  if (!isOpen) return null;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,10 +20,10 @@ export default function Contact({ isOpen, onClose }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
-  
-    const data = await response.json(); // Get response from the backend
-    console.log("Server Response:", data); // Log it to check
-  
+
+    const data = await response.json();
+    console.log("Server Response:", data);
+
     if (response.ok) {
       alert("Your message has been sent! 🕯️");
       setFormData({ name: "", mobile: "", message: "" });
@@ -32,18 +32,24 @@ export default function Contact({ isOpen, onClose }) {
       alert(`Failed to send message: ${data.error || "Unknown error"}`);
     }
   };
-  
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-yellow bg-opacity-50 backdrop-blur-sm px-4">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md sm:max-w-lg relative transform transition-all scale-95 sm:scale-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+      <div className="bg-zinc-900 text-white p-6 rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg border border-white/10 relative transition-all duration-300 scale-100">
         {/* Close Button */}
-        <button onClick={onClose} className="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-400 hover:text-rose-400 text-lg"
+        >
           ✖
         </button>
 
-        <h2 className="text-2xl font-semibold text-gray-800 text-center">Get in Touch</h2>
-        <p className="text-gray-500 text-center mb-4">We’d love to hear from you! 🕯️</p>
+        <h2 className="text-2xl font-bold text-center mb-1 text-white">
+          Get in Touch
+        </h2>
+        <p className="text-sm text-gray-400 text-center mb-6">
+          We'd love to hear from you! 🕯️
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -52,17 +58,17 @@ export default function Contact({ isOpen, onClose }) {
             placeholder="Your Name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="w-full p-3 bg-zinc-800 text-white border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 placeholder-gray-400"
             required
           />
 
           <input
             type="tel"
-            name="mobile" // ✅ Fixed name attribute
+            name="mobile"
             placeholder="Your Phone No"
             value={formData.mobile}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="w-full p-3 bg-zinc-800 text-white border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 placeholder-gray-400"
             required
           />
 
@@ -71,13 +77,13 @@ export default function Contact({ isOpen, onClose }) {
             placeholder="Your Address"
             value={formData.message}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 h-28"
+            className="w-full p-3 bg-zinc-800 text-white border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500 h-28 placeholder-gray-400"
             required
           />
 
           <button
             type="submit"
-            className="w-full bg-yellow-600 text-white py-3 rounded-md hover:bg-yellow-700 transition duration-300"
+            className="w-full py-3 rounded-md bg-rose-600 hover:bg-rose-700 transition text-white font-semibold shadow-md"
           >
             Send Message
           </button>
