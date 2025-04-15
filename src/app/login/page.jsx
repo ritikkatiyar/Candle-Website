@@ -16,32 +16,31 @@ export default function LoginPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-    
-    const data = await res.json(); 
-    
+
+    const data = await res.json();
+
     if (res.ok) {
       if (data.role === "admin") {
         router.push("/admin");
       } else {
         router.push("/user");
       }
-    }    
-    
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4">
-      <div className="w-full max-w-md bg-gray-900 shadow-xl rounded-2xl p-10 space-y-6 border border-gray-700">
-        <h2 className="text-4xl font-bold text-center text-rose-500">Login</h2>
-        <p className="text-center text-gray-400">Access your dashboard</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4 sm:px-6 md:px-8">
+      <div className="w-full max-w-md bg-gray-900 shadow-xl rounded-2xl p-8 space-y-6 border border-gray-700">
+        <h2 className="text-4xl font-extrabold text-center text-[#f0b101]">Login</h2>
+        <p className="text-center text-gray-400 text-lg">Access your dashboard</p>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="relative">
-            <FaUserAlt className="absolute left-3 top-3 text-gray-400" />
+            <FaUserAlt className="absolute left-4 top-3 text-gray-400" />
             <input
               type="email"
               placeholder="Email"
-              className="w-full bg-gray-800 text-white placeholder-gray-400 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full bg-gray-800 text-white placeholder-gray-400 pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -49,11 +48,11 @@ export default function LoginPage() {
           </div>
 
           <div className="relative">
-            <FaLock className="absolute left-3 top-3 text-gray-400" />
+            <FaLock className="absolute left-4 top-3 text-gray-400" />
             <input
               type="password"
               placeholder="Password"
-              className="w-full bg-gray-800 text-white placeholder-gray-400 pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full bg-gray-800 text-white placeholder-gray-400 pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -62,7 +61,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-rose-500 hover:bg-rose-600 transition-colors py-3 rounded-lg font-semibold text-white shadow-lg"
+            className="w-full bg-[#f0b101] hover:bg-rose-600 transition-colors py-3 rounded-lg font-semibold text-white shadow-lg"
           >
             Log In
           </button>
@@ -72,7 +71,7 @@ export default function LoginPage() {
           Don’t have an account?{" "}
           <a
             href="/register"
-            className="text-rose-400 hover:underline transition"
+            className="text-[#f0b101] hover:underline transition"
           >
             Sign up
           </a>

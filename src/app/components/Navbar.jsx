@@ -20,6 +20,15 @@ const navItems = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [hoverDropdown, setHoverDropdown] = useState(null); // New state for hovering dropdown
+
+  const handleDropdownEnter = (index) => {
+    setHoverDropdown(index); // Set the current dropdown to be hovered
+  };
+
+  const handleDropdownLeave = () => {
+    setHoverDropdown(null); // Reset the dropdown hover state when mouse leaves
+  };
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-white/10 shadow-[inset_0_0_0.5px_rgba(255,255,255,0.2)] font-serif text-white">
@@ -33,7 +42,12 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex space-x-8 text-sm font-medium items-center">
           {navItems.map((item, index) => (
-            <div key={index} className="relative group">
+            <div
+              key={index}
+              className="relative group"
+              onMouseEnter={() => handleDropdownEnter(index)} // Hover enter event
+              onMouseLeave={handleDropdownLeave} // Hover leave event
+            >
               {item.link ? (
                 <Link
                   href={item.link}
@@ -49,8 +63,13 @@ export default function Navbar() {
                 </span>
               )}
 
+              {/* Dropdown */}
               {item.subMenu && (
-                <div className="absolute left-0 top-8 bg-white/20 backdrop-blur-lg border border-white/30 text-white shadow-lg rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200 w-44 py-2 z-50">
+                <div
+                  className={`absolute left-0 top-8 bg-white/20 backdrop-blur-lg border border-white/30 text-white shadow-lg rounded-lg opacity-0 transition-all duration-200 w-44 py-2 z-50 ${
+                    (hoverDropdown === index || openDropdown === index) ? "opacity-100" : ""
+                  }`}
+                >
                   {item.subMenu.map((subItem, subIndex) => (
                     <Link
                       key={subIndex}
