@@ -21,6 +21,7 @@ export function middleware(request) {
 
       // pass if user is okay
     } catch (err) {
+      console.log("Error Occurred",err)
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
