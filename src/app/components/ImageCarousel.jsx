@@ -19,10 +19,10 @@ export default function ImageCarousel() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-[#121212] text-white py-16 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-20">
+    <section className="w-full bg-[#121212] text-white py-16 px-4 sm:px-6 md:px-12 flex flex-col lg:flex-row items-center justify-between gap-14 lg:gap-20">
       {/* Carousel Section */}
-      <div className="w-full md:w-1/2 flex flex-col items-center relative">
-        <div className="relative w-full max-w-sm h-[380px]">
+      <div className="w-full lg:w-1/2 flex flex-col items-center relative">
+        <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-sm h-[360px] sm:h-[400px]">
           <AnimatePresence mode="wait">
             {images.map((image, i) => {
               const isActive = index === i;
@@ -44,10 +44,10 @@ export default function ImageCarousel() {
                       <img
                         src={image.src}
                         alt={`Candle ${i + 1}`}
-                        className="rounded-xl object-cover w-full max-h-[250px]"
+                        className="rounded-xl object-cover w-full h-[220px] sm:h-[250px] md:h-[280px]"
                       />
                       {isActive && (
-                        <button className="mt-5 px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-white font-medium rounded-lg shadow-md transition-transform hover:scale-105">
+                        <button className="mt-5 w-full sm:w-auto px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-white font-medium rounded-lg shadow-md transition-transform hover:scale-105 text-sm sm:text-base">
                           🕯️ View Product
                         </button>
                       )}
@@ -67,19 +67,19 @@ export default function ImageCarousel() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6 }}
-            className="mt-6 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl text-center shadow-md text-white max-w-sm"
+            className="mt-6 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl text-center shadow-md text-white w-full max-w-xs sm:max-w-sm"
           >
-            <p className="text-base font-medium">{images[index].description}</p>
+            <p className="text-sm sm:text-base font-medium">{images[index].description}</p>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Why Choose Us Section */}
-      <div className="w-full md:w-1/2 text-center md:text-left">
-        <h2 className="text-3xl lg:text-4xl font-bold text-white">
+      <div className="w-full lg:w-1/2 text-center lg:text-left">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
           Why Choose <span className="text-yellow-500">Anaya Candles?</span>
         </h2>
-        <p className="mt-4 text-gray-300 text-lg max-w-md">
+        <p className="mt-4 text-gray-300 text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
           Discover the charm of artisanal craftsmanship and soothing aromas that elevate your ambiance.
         </p>
         <div className="mt-6 space-y-4">
@@ -90,7 +90,7 @@ export default function ImageCarousel() {
           ].map((feature, i) => (
             <div
               key={i}
-              className="flex items-center gap-3 justify-center md:justify-start text-lg font-medium text-gray-200"
+              className="flex items-center gap-3 justify-center lg:justify-start text-base sm:text-lg font-medium text-gray-200"
             >
               <span>{feature}</span>
             </div>
