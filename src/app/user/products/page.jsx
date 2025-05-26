@@ -7,26 +7,45 @@ export default function UserProductsPage() {
 
   useEffect(() => {
     fetch("/api/products")
-      .then(res => res.json())
-      .then(data => setProducts(data));
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
   }, []);
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">Available Products</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {products.map(product => (
-          <div key={product._id} className="border rounded-xl p-4 shadow bg-white">
-            <img src={product.imageUrl} alt={product.name} className="h-40 w-full object-cover mb-2 rounded-md" />
-            <h3 className="text-xl font-bold">{product.name}</h3>
-            <p className="text-sm text-gray-600">{product.description}</p>
-            <p className="font-semibold mt-2">₹{product.price}</p>
-            <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-              Add to Cart
+    <section className="py-16 px-4 bg-[#0d0d0d] text-white text-center">
+      <h2 className="text-3xl sm:text-4xl font-bold mb-8 tracking-tight">
+        ✨ Featured Collections
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+        {products.map((item, index) => (
+          <div
+            key={index}
+            className="bg-[#1a1a1a] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 rounded-2xl overflow-hidden shadow-md flex flex-col items-center p-6"
+          >
+            <Image
+              src={item.image}
+              alt={item.name}
+              width={250}
+              height={250}
+              className="rounded-xl object-cover mb-4"
+            />
+
+            <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
+            <p className="text-gray-300 text-sm mb-1">{item.price}</p>
+            <p className="text-yellow-400 text-sm italic">{item.offer}</p>
+
+            <button
+              className="mt-4 px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-400 text-black font-medium rounded-full hover:from-yellow-400 hover:to-orange-300 transition-all duration-300"
+              onClick={() =>
+                window.open("https://wa.me/c/919140206166", "_blank")
+              }
+            >
+              🛍️ Shop Now
             </button>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

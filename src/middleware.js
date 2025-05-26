@@ -1,9 +1,21 @@
 import { NextResponse } from "next/server";
-import { verify } from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export function middleware(request) {
+async function verifyToken(token) {
+  try {
+    const secret = new TextEncoder().encode(JWT_SECRET);
+    const { payload } = await jwtVerify(token, secret);
+    return payload; // payload contains the decoded user object
+  } catch (err) {
+    console.error("Token verification failed:", err);
+    return null;
+  }
+}
+
+export async function middleware(request) {
+  console.log("middle ware invoked")
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
@@ -13,7 +25,7 @@ export function middleware(request) {
     }
 
     try {
-      const user = verify(token, JWT_SECRET);
+      const user =await verifyToken(token);
 
       if (pathname.startsWith("/admin") && user.role !== "admin") {
         return NextResponse.redirect(new URL("/unauthorized", request.url));

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Admin Panel | Candle Co.',
+  title: 'User Panel | Candle Co.',
 };
 
 export default function UserLayout({ children }) {
