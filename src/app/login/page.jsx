@@ -6,25 +6,37 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      if (data.role === "admin") {
-        router.push("/admin");
+      if (res.ok) {
+        if (data.role === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/user");
+        }
       } else {
-        router.push("/user");
+        setError(data.message || "Login failed. Please try again.");
       }
+    } catch (error) {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -35,6 +47,12 @@ export default function LoginPage() {
         <p className="text-center text-gray-400 text-lg">Access your dashboard</p>
 
         <form onSubmit={handleLogin} className="space-y-4">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <p className="text-red-400 text-sm text-center">{error}</p>
+            </div>
+          )}
+
           <div className="relative">
             <FaUserAlt className="absolute left-4 top-3 text-gray-400" />
             <input
@@ -61,9 +79,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-[#f0b101] hover:bg-rose-600 transition-colors py-3 rounded-lg font-semibold text-white shadow-lg"
+            disabled={isLoading}
+            className="w-full bg-[#f0b101] hover:bg-rose-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors py-3 rounded-lg font-semibold text-white shadow-lg"
           >
-            Log In
+            {isLoading ? "Logging in..." : "Log In"}
           </button>
         </form>
 

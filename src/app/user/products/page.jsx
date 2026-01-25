@@ -1,51 +1,301 @@
 // app/user/products/page.jsx
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function UserProductsPage() {
+  const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("name");
+  const [showFilters, setShowFilters] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
+    fetchProducts();
+    loadCart();
   }, []);
 
-  return (
-    <section className="py-16 px-4 bg-[#0d0d0d] text-white text-center">
-      <h2 className="text-3xl sm:text-4xl font-bold mb-8 tracking-tight">
-        ✨ Featured Collections
-      </h2>
+  useEffect(() => {
+    filterAndSortProducts();
+  }, [allProducts, searchTerm, selectedCategory, sortBy]);
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
-        {products.map((item, index) => (
-          <div
-            key={index}
-            className="bg-[#1a1a1a] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 rounded-2xl overflow-hidden shadow-md flex flex-col items-center p-6"
-          >
-            <Image
-              src={item.image}
-              alt={item.name}
-              width={250}
-              height={250}
-              className="rounded-xl object-cover mb-4"
-            />
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      setAllProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-            <p className="text-gray-300 text-sm mb-1">{item.price}</p>
-            <p className="text-yellow-400 text-sm italic">{item.offer}</p>
+  const loadCart = () => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  };
 
-            <button
-              className="mt-4 px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-400 text-black font-medium rounded-full hover:from-yellow-400 hover:to-orange-300 transition-all duration-300"
-              onClick={() =>
-                window.open("https://wa.me/c/919140206166", "_blank")
-              }
-            >
-              🛍️ Shop Now
-            </button>
-          </div>
-        ))}
+  const saveCart = (newCart) => {
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    setCart(newCart);
+  };
+
+  const addToCart = (product) => {
+    const existingItem = cart.find(item => item._id === product._id);
+    if (existingItem) {
+      const updatedCart = cart.map(item =>
+        item._id === product._id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+      saveCart(updatedCart);
+    } else {
+      const newItem = { ...product, quantity: 1 };
+      saveCart([...cart, newItem]);
+    }
+    // Show feedback
+    showNotification(`${product.name} added to cart!`);
+  };
+
+  const getCartCount = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  const filterAndSortProducts = () => {
+    let filtered = [...allProducts];
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Category filter
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(product => product.category === selectedCategory);
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "price-low":
+          return parseFloat(a.price.replace('₹', '').replace(',', '')) -
+                 parseFloat(b.price.replace('₹', '').replace(',', ''));
+        case "price-high":
+          return parseFloat(b.price.replace('₹', '').replace(',', '')) -
+                 parseFloat(a.price.replace('₹', '').replace(',', ''));
+        default:
+          return 0;
+      }
+    });
+
+    setProducts(filtered);
+  };
+
+  const getCategories = () => {
+    const categories = [...new Set(allProducts.map(product => product.category))];
+    return categories;
+  };
+
+  const showNotification = (message) => {
+    // Simple notification - you could enhance this with a proper notification system
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 3000);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+          <div className="text-xl">Loading amazing products...</div>
+        </div>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#121212] text-white">
+      {/* Header */}
+      <div className="bg-[#1a1a1a] p-4 sticky top-0 z-40 shadow-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">🛍️ Our Products</h1>
+          <button
+            onClick={() => router.push('/user/cart')}
+            className="bg-yellow-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition relative border-0"
+          >
+            🛒 Cart ({getCartCount()})
+          </button>
+        </div>
+
+        {/* Search and Filters */}
+        <div className="space-y-3">
+          {/* Search Bar */}
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-[#2a2a2a] text-white placeholder-gray-400 pl-10 pr-4 py-2 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            />
+            <div className="absolute left-3 top-2.5 text-gray-400">🔍</div>
+          </div>
+
+          {/* Filter Toggle */}
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="bg-[#2a2a2a] px-4 py-2 rounded-lg border-0 hover:bg-[#3a3a3a] transition"
+            >
+              {showFilters ? 'Hide Filters' : 'Show Filters'} 🎛️
+            </button>
+
+            {/* Sort Dropdown */}
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-[#2a2a2a] text-white px-3 py-2 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            >
+              <option value="name">Sort by Name</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+            </select>
+          </div>
+
+          {/* Filters */}
+          {showFilters && (
+            <div className="bg-[#2a2a2a] p-4 rounded-lg">
+              <h3 className="font-semibold mb-3">Filter by Category</h3>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setSelectedCategory("all")}
+                  className={`px-3 py-1 rounded-full text-sm border-0 ${
+                    selectedCategory === "all"
+                      ? 'bg-yellow-500 text-black'
+                      : 'bg-[#3a3a3a] text-white hover:bg-[#4a4a4a]'
+                  }`}
+                >
+                  All
+                </button>
+                {getCategories().map(category => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-3 py-1 rounded-full text-sm capitalize border-0 ${
+                      selectedCategory === category
+                        ? 'bg-yellow-500 text-black'
+                        : 'bg-[#3a3a3a] text-white hover:bg-[#4a4a4a]'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Products Grid */}
+      <div className="p-6">
+        {products.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-xl font-semibold mb-2">No products found</h3>
+            <p className="text-gray-400">Try adjusting your search or filters</p>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-between items-center mb-6">
+              <p className="text-gray-400">
+                Showing {products.length} product{products.length !== 1 ? 's' : ''}
+                {searchTerm && ` for "${searchTerm}"`}
+                {selectedCategory !== "all" && ` in ${selectedCategory}`}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <div
+                  key={product._id}
+                  className="bg-[#1a1a1a] rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] group"
+                >
+                  <div className="relative overflow-hidden rounded-lg mb-4">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      width={300}
+                      height={300}
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
+                      {product.category}
+                    </div>
+                  </div>
+
+                  <h3 className="text-lg font-semibold mb-2 line-clamp-2">{product.name}</h3>
+                  <p className="text-gray-300 text-sm mb-3 line-clamp-2">{product.description}</p>
+                  <div className="flex justify-between items-center mb-4">
+                    <p className="text-yellow-400 font-bold text-lg">{product.price}</p>
+                    <div className="flex items-center text-sm text-gray-400">
+                      ⭐⭐⭐⭐⭐
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="w-full bg-yellow-500 text-black py-2 rounded-lg font-semibold hover:bg-yellow-400 transition flex items-center justify-center gap-2 border-0"
+                  >
+                    <span>Add to Cart</span>
+                    <span>🛒</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="fixed bottom-4 right-4 space-y-2">
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white p-3 rounded-full shadow-lg transition"
+          title="Back to top"
+        >
+          ↑
+        </button>
+        <button
+          onClick={() => router.push('/user/cart')}
+          className="bg-yellow-500 hover:bg-yellow-400 text-black p-3 rounded-full shadow-lg transition relative border-0"
+          title="View Cart"
+        >
+          🛒
+          {getCartCount() > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {getCartCount()}
+            </span>
+          )}
+        </button>
+      </div>
+    </div>
   );
 }

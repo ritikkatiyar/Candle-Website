@@ -2,21 +2,32 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 
-const images = [
-  { src: "/candle1.JPG", description: "Relaxing lavender-scented candle." },
-  { src: "/candle2.JPG", description: "Elegant vanilla bean fragrance." },
-  { src: "/candle3.JPG", description: "Soothing sandalwood essence." },
-];
-
 export default function ImageCarousel() {
+  const [images, setImages] = useState([]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        const carouselProducts = data.filter(p => p.category === 'carousel');
+        setImages(carouselProducts.map(p => ({ src: p.image, description: p.description })));
+      } catch (error) {
+        console.error('Error fetching carousel products:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (images.length === 0) return;
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   return (
     <section className="w-full bg-[#121212] text-white py-16 px-4 sm:px-6 md:px-12 flex flex-col lg:flex-row items-center justify-between gap-14 lg:gap-20">
@@ -60,18 +71,20 @@ export default function ImageCarousel() {
         </div>
 
         {/* Description */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6 }}
-            className="mt-6 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl text-center shadow-md text-white w-full max-w-xs sm:max-w-sm"
-          >
-            <p className="text-sm sm:text-base font-medium">{images[index].description}</p>
-          </motion.div>
-        </AnimatePresence>
+        {images.length > 0 && (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6 }}
+              className="mt-6 bg-white/10 backdrop-blur-md px-4 py-3 rounded-xl text-center shadow-md text-white w-full max-w-xs sm:max-w-sm"
+            >
+              <p className="text-sm sm:text-base font-medium">{images[index].description}</p>
+            </motion.div>
+          </AnimatePresence>
+        )}
       </div>
 
       {/* Why Choose Us Section */}

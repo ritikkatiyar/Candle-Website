@@ -4,41 +4,55 @@ import { useRouter } from "next/navigation";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 
 export default function RegisterPage() {
-  const [name,setName]=useState("") 
+  const [name,setName]=useState("")
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({name, email, password }),
-    });
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({name, email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      // Assume cookie is set on server
-      router.push("/user");
-    } else {
-      alert(data.error || "Something went wrong");
+      if (res.ok) {
+        // Assume cookie is set on server
+        router.push("/user");
+      } else {
+        setError(data.error || "Registration failed. Please try again.");
+      }
+    } catch (error) {
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  return (
+  };  return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4 sm:px-6 md:px-8">
       <div className="w-full max-w-md bg-gray-900 shadow-xl rounded-2xl p-8 space-y-6 border border-gray-700">
         <h2 className="text-4xl font-extrabold text-center text-[#f0b101]">Sign Up</h2>
         <p className="text-center text-gray-400 text-lg">Create your account</p>
 
         <form onSubmit={handleRegister} className="space-y-4">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <p className="text-red-400 text-sm text-center">{error}</p>
+            </div>
+          )}
+
           <div className="relative">
             <FaUserAlt className="absolute left-4 top-3 text-gray-400" />
             <input
-              type="name"
+              type="text"
               placeholder="Name"
               className="w-full bg-gray-800 text-white placeholder-gray-400 pl-12 pr-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
               value={name}
@@ -72,9 +86,10 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full bg-[#f0b101] hover:bg-rose-600 transition-colors py-3 rounded-lg font-semibold text-white shadow-lg"
+            disabled={isLoading}
+            className="w-full bg-[#f0b101] hover:bg-rose-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors py-3 rounded-lg font-semibold text-white shadow-lg"
           >
-            Sign Up
+            {isLoading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 

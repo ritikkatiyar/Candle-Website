@@ -4,16 +4,24 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const images = ["/main4.jpeg", "/main3.jpeg","/main1.jpeg"];
 
-const products = [
-  { name: "Rosette Radiance", price: "₹249.00", image: "/candle4.JPG" },
-  { name: "Supreme Essence", price: "₹349.00", image: "/supreme.jpeg" },
-  { name: "Candie", price: "₹149.00", image: "/candie.jpeg" },
-];
-
 const HeroSection = ({ onShopNowClick }) => {
+  const [products, setProducts] = useState([]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        const featured = data.filter(p => p.category === 'featured');
+        setProducts(featured);
+      } catch (error) {
+        console.error('Error fetching featured products:', error);
+      }
+    };
+    fetchProducts();
+
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
     }, 5000);

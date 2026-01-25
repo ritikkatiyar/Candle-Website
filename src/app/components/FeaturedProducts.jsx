@@ -1,36 +1,50 @@
 import Image from "next/image";
 import Contact from "./Contact";
-
-
-const products = [
-  {
-    name: "Single Luxury Candle",
-    price: "₹1299",
-    offer: "Buy 1, Get 1 at 50% Off",
-    image: "/single-luxury.jpeg",
-  },
-  {
-    name: "Candle Gift Box",
-    price: "₹1,299 – ₹1,499",
-    offer: "Exclusive Festive Combo",
-    image: "/gift-box.jpeg",
-  },
-  {
-    name: "Limited Edition Candle",
-    price: "₹699 – ₹899",
-    offer: "Free Personalization",
-    image: "/candle3.JPG",
-  },
-  {
-    name: "DIY Candle-Making Kit",
-    price: "₹799 – ₹999",
-    offer: "Create Your Own Scent",
-    image: "/diy.jpeg",
-  },
-];
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function FeaturedProducts({refProp}) {
+  const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+  const router = useRouter();
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        const featured = data.filter(p => p.category === 'featured');
+        setProducts(featured);
+      } catch (error) {
+        console.error('Error fetching featured products:', error);
+      }
+    };
+    fetchProducts();
+
+    // Load cart from localStorage
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
+
+  const addToCart = (product) => {
+    const existingItem = cart.find(item => item._id === product._id);
+    let updatedCart;
+    if (existingItem) {
+      updatedCart = cart.map(item =>
+        item._id === product._id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      updatedCart = [...cart, { ...product, quantity: 1 }];
+    }
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    setCart(updatedCart);
+    alert('Added to cart! Go to /user/products to checkout.');
+  };
 
   return (
     <section
@@ -44,7 +58,7 @@ export default function FeaturedProducts({refProp}) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
         {products.map((item, index) => (
           <div
-            key={index}
+            key={item._id || index}
             className="bg-[#1a1a1a] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 rounded-2xl overflow-hidden shadow-md flex flex-col items-center p-6"
           >
             <Image
@@ -57,13 +71,13 @@ export default function FeaturedProducts({refProp}) {
 
             <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
             <p className="text-gray-300 text-sm mb-1">{item.price}</p>
-            <p className="text-yellow-400 text-sm italic">{item.offer}</p>
+            <p className="text-yellow-400 text-sm italic">{item.description}</p>
 
             <button
   className="mt-4 px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-400 text-black font-medium rounded-full hover:from-yellow-400 hover:to-orange-300 transition-all duration-300"
-  onClick={() => window.open("https://wa.me/c/919140206166", "_blank")}
+  onClick={() => addToCart(item)}
 >
-  🛍️ Shop Now
+  🛒 Add to Cart
 </button>
 
           </div>

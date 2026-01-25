@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Contact from './Contact';
 
 const features = [
@@ -11,15 +11,24 @@ const features = [
   "🕯️ Unique Designs – From floral embeds to coconut shell creations."
 ];
 
-const collections = [
-  { name: "Aroma Therapy", img: "/aroma.jpeg", desc: "Infused with calming essential oils." },
-  { name: "Eco-Friendly", img: "/eco.jpeg", desc: "Upcycled coconut shell & soy wax candles." },
-  { name: "Luxury", img: "/luxury.jpg", desc: "Premium handcrafted elegance." },
-  { name: "Festive", img: "/candle3.JPG", desc: "Perfect for Diwali, Christmas & more." },
-];
-
 export default function Content() {
+  const [collections, setCollections] = useState([]);
   const [isPopupOpen, setPopupOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const res = await fetch('/api/products');
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        const collectionProducts = data.filter(p => p.category === 'collection');
+        setCollections(collectionProducts.map(p => ({ name: p.name, img: p.image, desc: p.description })));
+      } catch (error) {
+        console.error('Error fetching collection products:', error);
+      }
+    };
+    fetchCollections();
+  }, []);
 
   return (
     <main className="bg-[#0d0d0d] text-white px-4 sm:px-6 md:px-12 lg:px-20 py-12 space-y-16" >
