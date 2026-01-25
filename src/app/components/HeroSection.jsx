@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-
-const images = ["/main4.jpeg", "/main3.jpeg","/main1.jpeg"];
+import { PRODUCT_CATEGORIES } from "@/lib/constants";
 
 const HeroSection = ({ onShopNowClick }) => {
   const [products, setProducts] = useState([]);
+  const [carouselImages, setCarouselImages] = useState([]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -14,17 +14,34 @@ const HeroSection = ({ onShopNowClick }) => {
         const res = await fetch('/api/products');
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
+
+        // Filter featured products for the collections section
         const featured = data.filter(p => p.category === 'featured');
         setProducts(featured);
+
+        // Filter hero images for the background
+        const heroImages = data.filter(p => p.category === PRODUCT_CATEGORIES.HERO);
+        const imageUrls = heroImages.map(p => p.image).filter(img => img);
+        setCarouselImages(imageUrls);
+
       } catch (error) {
-        console.error('Error fetching featured products:', error);
+        console.error('Error fetching products:', error);
+        // No fallback images - carousel will be empty if API fails
+        setCarouselImages([]);
       }
     };
     fetchProducts();
 
+    // Set up interval for carousel, but only if we have images
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
+      setCarouselImages(prevImages => {
+        if (prevImages.length > 1) {
+          setIndex((prev) => (prev + 1) % prevImages.length);
+        }
+        return prevImages;
+      });
     }, 5000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -34,7 +51,7 @@ const HeroSection = ({ onShopNowClick }) => {
       <section className="relative w-full h-[60vh] sm:h-screen flex items-center justify-center text-center px-4 overflow-hidden">
         {/* Background Image Carousel */}
         <div className="absolute inset-0">
-          {images.length > 1 ? (
+          {carouselImages.length > 1 ? (
             <AnimatePresence mode="wait">
               <motion.div
                 key={index}
@@ -45,7 +62,7 @@ const HeroSection = ({ onShopNowClick }) => {
                 className="absolute inset-0"
               >
                 <Image
-                  src={images[index]}
+                  src={carouselImages[index]}
                   alt="Background"
                   fill
                   style={{ objectFit: "cover", objectPosition: "center" }}
@@ -53,15 +70,15 @@ const HeroSection = ({ onShopNowClick }) => {
                 />
               </motion.div>
             </AnimatePresence>
-          ) : (
+          ) : carouselImages.length === 1 ? (
             <Image
-              src={images[0]}
+              src={carouselImages[0]}
               alt="Background"
               fill
               style={{ objectFit: "cover", objectPosition: "center" }}
               className="opacity-80"
             />
-          )}
+          ) : null}
         </div>
 
         {/* Hero Content */}

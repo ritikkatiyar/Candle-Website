@@ -2,6 +2,7 @@ import Image from "next/image";
 import Contact from "./Contact";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { PRODUCT_CATEGORIES } from "@/lib/constants";
 
 export default function FeaturedProducts({refProp}) {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ export default function FeaturedProducts({refProp}) {
         const res = await fetch('/api/products');
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
-        const featured = data.filter(p => p.category === 'featured');
+        const featured = data.filter(p => p.category === PRODUCT_CATEGORIES.FEATURED);
         setProducts(featured);
       } catch (error) {
         console.error('Error fetching featured products:', error);

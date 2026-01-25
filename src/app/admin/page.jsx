@@ -2,13 +2,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { PRODUCT_CATEGORIES, ORDER_STATUSES } from '@/lib/constants';
 
 export default function AdminDashboard() {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [form, setForm] = useState({ name: '', description: '', price: '', image: '', category: 'featured' });
+  const [form, setForm] = useState({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED });
   const [editingId, setEditingId] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'products') fetchProducts();
@@ -29,23 +32,66 @@ export default function AdminDashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Upload image if a file is selected
+    let imageUrl = form.image;
+    if (selectedFile) {
+      imageUrl = await uploadImage();
+      if (!imageUrl) return; // Stop if upload failed
+    }
+
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId ? `/api/products/${editingId}` : '/api/products';
     const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, image: imageUrl }),
     });
     if (res.ok) {
       fetchProducts();
-      setForm({ name: '', description: '', price: '', image: '', category: 'featured' });
+      setForm({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED });
       setEditingId(null);
+      setSelectedFile(null);
     }
   };
 
   const handleEdit = (product) => {
     setForm(product);
     setEditingId(product._id);
+    setSelectedFile(null); // Reset file selection when editing
+  };
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const uploadImage = async () => {
+    if (!selectedFile) return null;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        return data.url;
+      } else {
+        alert('Image upload failed');
+        return null;
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Image upload failed');
+      return null;
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -98,7 +144,7 @@ export default function AdminDashboard() {
           </div>
           <div className="bg-white rounded-xl shadow-md p-6">
             <h2 className="text-xl font-semibold">Pending Orders</h2>
-            <p className="text-3xl font-bold mt-2">{orders.filter(o => o.status === 'pending').length}</p>
+            <p className="text-3xl font-bold mt-2">{orders.filter(o => o.status === ORDER_STATUSES.PENDING).length}</p>
           </div>
         </div>
       )}
@@ -132,26 +178,40 @@ export default function AdminDashboard() {
                 className="p-2 border rounded"
                 required
               />
-              <input
-                type="text"
-                placeholder="Image URL"
-                value={form.image}
-                onChange={(e) => setForm({ ...form, image: e.target.value })}
-                className="p-2 border rounded"
-                required
-              />
+              <div className="space-y-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="p-2 border rounded w-full"
+                />
+                {selectedFile && (
+                  <p className="text-sm text-gray-600">Selected: {selectedFile.name}</p>
+                )}
+                {form.image && !selectedFile && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600">Current image:</p>
+                    <img src={form.image} alt="Current" className="w-20 h-20 object-cover rounded" />
+                  </div>
+                )}
+              </div>
               <select
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className="p-2 border rounded"
               >
-                <option value="featured">Featured</option>
-                <option value="carousel">Carousel</option>
-                <option value="collection">Collection</option>
+                <option value={PRODUCT_CATEGORIES.FEATURED}>Featured</option>
+                <option value={PRODUCT_CATEGORIES.CAROUSEL}>Carousel</option>
+                <option value={PRODUCT_CATEGORIES.HERO}>Hero</option>
+                <option value={PRODUCT_CATEGORIES.COLLECTION}>Collection</option>
               </select>
             </div>
-            <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-              {editingId ? 'Update' : 'Add'} Product
+            <button
+              type="submit"
+              disabled={uploading}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+            >
+              {uploading ? 'Uploading...' : (editingId ? 'Update' : 'Add') + ' Product'}
             </button>
           </form>
 
@@ -193,10 +253,10 @@ export default function AdminDashboard() {
                     <div className="text-right">
                       <p className="font-bold">{order.totalAmount}</p>
                       <span className={`px-2 py-1 rounded text-sm ${
-                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        order.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                        order.status === 'shipped' ? 'bg-purple-100 text-purple-800' :
-                        order.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                        order.status === ORDER_STATUSES.PENDING ? 'bg-yellow-100 text-yellow-800' :
+                        order.status === ORDER_STATUSES.CONFIRMED ? 'bg-blue-100 text-blue-800' :
+                        order.status === ORDER_STATUSES.SHIPPED ? 'bg-purple-100 text-purple-800' :
+                        order.status === ORDER_STATUSES.DELIVERED ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
                       }`}>
                         {order.status}
@@ -221,11 +281,11 @@ export default function AdminDashboard() {
                       onChange={(e) => updateOrderStatus(order._id, e.target.value)}
                       className="px-3 py-1 border rounded"
                     >
-                      <option value="pending">Pending</option>
-                      <option value="confirmed">Confirmed</option>
-                      <option value="shipped">Shipped</option>
-                      <option value="delivered">Delivered</option>
-                      <option value="cancelled">Cancelled</option>
+                      <option value={ORDER_STATUSES.PENDING}>Pending</option>
+                      <option value={ORDER_STATUSES.CONFIRMED}>Confirmed</option>
+                      <option value={ORDER_STATUSES.SHIPPED}>Shipped</option>
+                      <option value={ORDER_STATUSES.DELIVERED}>Delivered</option>
+                      <option value={ORDER_STATUSES.CANCELLED}>Cancelled</option>
                     </select>
                   </div>
                 </div>

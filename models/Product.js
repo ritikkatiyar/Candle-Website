@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['featured', 'carousel', 'collection'],
+    enum: ['featured', 'carousel', 'hero', 'collection'],
     required: true,
   },
   createdAt: {

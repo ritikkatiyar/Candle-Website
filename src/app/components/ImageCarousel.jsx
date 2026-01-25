@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
+import { PRODUCT_CATEGORIES } from "@/lib/constants";
 
 export default function ImageCarousel() {
   const [images, setImages] = useState([]);
@@ -12,7 +13,7 @@ export default function ImageCarousel() {
         const res = await fetch('/api/products');
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
-        const carouselProducts = data.filter(p => p.category === 'carousel');
+        const carouselProducts = data.filter(p => p.category === PRODUCT_CATEGORIES.CAROUSEL);
         setImages(carouselProducts.map(p => ({ src: p.image, description: p.description })));
       } catch (error) {
         console.error('Error fetching carousel products:', error);
