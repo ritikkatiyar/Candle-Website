@@ -1,5 +1,5 @@
-import connectToDatabase from '../../../../lib/mongodb';
-import Product from '../../../../models/Product';
+import connectToDatabase from '@/lib/mongodb';
+import Product from '@/models/Product';
 
 export async function PUT(request, { params }) {
   try {

@@ -1,5 +1,5 @@
-import connectToDatabase from '../../../../lib/mongodb';
-import Order from '../../../../models/Order';
+import connectToDatabase from '@/lib/mongodb';
+import Order from '@/models/Order';
 import { jwtVerify } from 'jose';
 
 const JWT_SECRET = process.env.JWT_SECRET;
