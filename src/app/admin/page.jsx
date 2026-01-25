@@ -7,15 +7,19 @@ import { PRODUCT_CATEGORIES, ORDER_STATUSES } from '@/lib/constants';
 export default function AdminDashboard() {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [content, setContent] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [form, setForm] = useState({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED });
+  const [contentForm, setContentForm] = useState({ section: 'about', title: '', content: '', image: '', order: 0 });
   const [editingId, setEditingId] = useState(null);
+  const [editingContentId, setEditingContentId] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'products') fetchProducts();
     if (activeTab === 'orders') fetchOrders();
+    if (activeTab === 'content') fetchContent();
   }, [activeTab]);
 
   const fetchProducts = async () => {
@@ -28,6 +32,12 @@ export default function AdminDashboard() {
     const res = await fetch('/api/orders');
     const data = await res.json();
     setOrders(data);
+  };
+
+  const fetchContent = async () => {
+    const res = await fetch('/api/content');
+    const data = await res.json();
+    setContent(data);
   };
 
   const handleSubmit = async (e) => {
@@ -99,6 +109,52 @@ export default function AdminDashboard() {
     fetchProducts();
   };
 
+  const handleContentSubmit = async (e) => {
+    e.preventDefault();
+
+    // Upload image if a file is selected
+    let imageUrl = contentForm.image;
+    if (selectedFile) {
+      imageUrl = await uploadImage();
+      if (!imageUrl) return; // Stop if upload failed
+    }
+
+    const method = editingContentId ? 'PUT' : 'POST';
+    const body = editingContentId
+      ? { id: editingContentId, ...contentForm, image: imageUrl }
+      : { ...contentForm, image: imageUrl };
+
+    const res = await fetch('/api/content', {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) {
+      fetchContent();
+      setContentForm({ section: 'about', title: '', content: '', image: '', order: 0 });
+      setEditingContentId(null);
+      setSelectedFile(null);
+    }
+  };
+
+  const handleContentEdit = (contentItem) => {
+    setContentForm({
+      section: contentItem.section,
+      title: contentItem.title,
+      content: contentItem.content,
+      image: contentItem.image || '',
+      order: contentItem.order
+    });
+    setEditingContentId(contentItem._id);
+    setSelectedFile(null);
+  };
+
+  const handleContentDelete = async (id) => {
+    await fetch(`/api/content?id=${id}`, { method: 'DELETE' });
+    fetchContent();
+  };
+
   const updateOrderStatus = async (orderId, status) => {
     // You can implement order status update API if needed
     console.log('Update order', orderId, 'to status', status);
@@ -128,6 +184,12 @@ export default function AdminDashboard() {
             className={`px-4 py-2 rounded ${activeTab === 'orders' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
           >
             Orders
+          </button>
+          <button
+            onClick={() => setActiveTab('content')}
+            className={`px-4 py-2 rounded ${activeTab === 'content' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
+          >
+            Content
           </button>
         </div>
       </div>
@@ -289,6 +351,124 @@ export default function AdminDashboard() {
                       <option value={ORDER_STATUSES.DELIVERED}>Delivered</option>
                       <option value={ORDER_STATUSES.CANCELLED}>Cancelled</option>
                     </select>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {activeTab === 'content' && (
+        <>
+          <h2 className="text-2xl font-bold mb-4">📝 Content Management</h2>
+
+          {/* Content Form */}
+          <form onSubmit={handleContentSubmit} className="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 className="text-xl font-semibold mb-4">
+              {editingContentId ? 'Edit Content' : 'Add New Content'}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <select
+                value={contentForm.section}
+                onChange={(e) => setContentForm({ ...contentForm, section: e.target.value })}
+                className="p-2 border rounded"
+                required
+              >
+                <option value="about">About Section</option>
+                <option value="story">Our Story</option>
+                <option value="features">Features</option>
+                <option value="collections">Collections</option>
+                <option value="care-tips">Care Tips</option>
+                <option value="reviews">Reviews</option>
+                <option value="contact">Contact</option>
+              </select>
+              <input
+                type="number"
+                placeholder="Order"
+                value={contentForm.order}
+                onChange={(e) => setContentForm({ ...contentForm, order: parseInt(e.target.value) || 0 })}
+                className="p-2 border rounded"
+                min="0"
+              />
+            </div>
+            <div className="mt-4 space-y-4">
+              <input
+                type="text"
+                placeholder="Title"
+                value={contentForm.title}
+                onChange={(e) => setContentForm({ ...contentForm, title: e.target.value })}
+                className="w-full p-2 border rounded"
+                required
+              />
+              <textarea
+                placeholder="Content"
+                value={contentForm.content}
+                onChange={(e) => setContentForm({ ...contentForm, content: e.target.value })}
+                className="w-full p-2 border rounded h-32"
+                required
+              />
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="p-2 border rounded w-full"
+                />
+                {selectedFile && (
+                  <p className="text-sm text-gray-600 mt-1">Selected: {selectedFile.name}</p>
+                )}
+                {contentForm.image && !selectedFile && (
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-600">Current image:</p>
+                    <img src={contentForm.image} alt="Current" className="w-20 h-20 object-cover rounded mt-1" />
+                  </div>
+                )}
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={uploading}
+              className="mt-4 px-4 py-2 bg-green-500 text-white rounded disabled:bg-gray-400"
+            >
+              {uploading ? 'Uploading...' : (editingContentId ? 'Update' : 'Add') + ' Content'}
+            </button>
+          </form>
+
+          {/* Content List */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h3 className="text-xl font-semibold mb-4">Homepage Content</h3>
+            <div className="space-y-4">
+              {content.map((item) => (
+                <div key={item._id} className="p-4 border rounded">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm font-medium">
+                          {item.section}
+                        </span>
+                        <span className="text-sm text-gray-500">Order: {item.order}</span>
+                      </div>
+                      <h4 className="font-bold">{item.title}</h4>
+                      <p className="text-gray-600 text-sm mt-1">{item.content.substring(0, 100)}...</p>
+                      {item.image && (
+                        <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded mt-2" />
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleContentEdit(item)}
+                        className="px-3 py-1 bg-yellow-500 text-white rounded text-sm"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleContentDelete(item._id)}
+                        className="px-3 py-1 bg-red-500 text-white rounded text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
