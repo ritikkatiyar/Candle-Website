@@ -168,16 +168,18 @@ export default function AdminDashboard() {
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="p-2 border rounded"
-                required
+                required={form.category !== PRODUCT_CATEGORIES.HERO}
               />
-              <input
-                type="text"
-                placeholder="Price"
-                value={form.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value })}
-                className="p-2 border rounded"
-                required
-              />
+              {form.category !== PRODUCT_CATEGORIES.HERO && (
+                <input
+                  type="text"
+                  placeholder="Price"
+                  value={form.price}
+                  onChange={(e) => setForm({ ...form, price: e.target.value })}
+                  className="p-2 border rounded"
+                  required
+                />
+              )}
               <div className="space-y-2">
                 <input
                   type="file"
@@ -223,7 +225,7 @@ export default function AdminDashboard() {
                   <div>
                     <h4 className="font-bold">{product.name}</h4>
                     <p>{product.description}</p>
-                    <p>{product.price} - {product.category}</p>
+                    <p>{product.category === PRODUCT_CATEGORIES.HERO ? 'Display Image' : product.price} - {product.category}</p>
                   </div>
                   <div>
                     <button onClick={() => handleEdit(product)} className="mr-2 px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>

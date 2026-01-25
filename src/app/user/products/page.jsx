@@ -28,7 +28,9 @@ export default function UserProductsPage() {
     try {
       const res = await fetch('/api/products');
       const data = await res.json();
-      setAllProducts(data);
+      // Filter out hero images as they are for display only
+      const purchasableProducts = data.filter(product => product.category !== 'hero');
+      setAllProducts(purchasableProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {

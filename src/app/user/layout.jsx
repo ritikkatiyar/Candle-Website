@@ -16,7 +16,7 @@ export default function UserLayout({ children }) {
       });
 
       if (res.ok) {
-        router.push('/login');
+        router.push('/');
       } else {
         console.error('Logout failed');
       }
