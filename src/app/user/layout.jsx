@@ -1,6 +1,7 @@
 // app/admin/layout.tsx
 'use client';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function UserLayout({ children }) {
@@ -42,7 +43,9 @@ export default function UserLayout({ children }) {
 
       {/* Main Content with top padding to account for fixed header */}
       <main className="pt-20">
-        {children}
+        <Suspense fallback={<div className="min-h-screen bg-[#121212] text-white flex items-center justify-center">Loading...</div>}>
+          {children}
+        </Suspense>
       </main>
     </div>
   );

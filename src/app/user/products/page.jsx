@@ -111,11 +111,11 @@ export default function UserProductsPage() {
         case "name":
           return a.name.localeCompare(b.name);
         case "price-low":
-          return parseFloat(a.price.replace('₹', '').replace(',', '')) -
-                 parseFloat(b.price.replace('₹', '').replace(',', ''));
+          return parseFloat(a.price.replace('???', '').replace(',', '')) -
+                 parseFloat(b.price.replace('???', '').replace(',', ''));
         case "price-high":
-          return parseFloat(b.price.replace('₹', '').replace(',', '')) -
-                 parseFloat(a.price.replace('₹', '').replace(',', ''));
+          return parseFloat(a.price.replace('???', '').replace(',', '')) -
+                 parseFloat(b.price.replace('???', '').replace(',', ''));
         default:
           return 0;
       }
@@ -151,12 +151,12 @@ export default function UserProductsPage() {
       {/* Header */}
       <div className="bg-[#1a1a1a] p-4 sticky top-0 z-40 shadow-lg">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">🛍️ Our Products</h1>
+          <h1 className="text-2xl font-bold">??????? Our Products</h1>
           <button
             onClick={() => router.push('/user/cart')}
             className="bg-yellow-500 text-black px-4 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition relative border-0"
           >
-            🛒 Cart ({getCartCount()})
+            ???? Cart ({getCartCount()})
           </button>
         </div>
 
@@ -171,7 +171,7 @@ export default function UserProductsPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-[#2a2a2a] text-white placeholder-gray-400 pl-10 pr-4 py-2 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">🔍</div>
+            <div className="absolute left-3 top-2.5 text-gray-400">????</div>
           </div>
 
           {/* Filter Toggle */}
@@ -180,7 +180,7 @@ export default function UserProductsPage() {
               onClick={() => setShowFilters(!showFilters)}
               className="bg-[#2a2a2a] px-4 py-2 rounded-lg border-0 hover:bg-[#3a3a3a] transition"
             >
-              {showFilters ? 'Hide Filters' : 'Show Filters'} 🎛️
+              {showFilters ? 'Hide Filters' : 'Show Filters'} ???????
             </button>
 
             {/* Sort Dropdown */}
@@ -233,7 +233,7 @@ export default function UserProductsPage() {
       <div className="p-6">
         {products.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
+            <div className="text-6xl mb-4">????</div>
             <h3 className="text-xl font-semibold mb-2">No products found</h3>
             <p className="text-gray-400">Try adjusting your search or filters</p>
           </div>
@@ -271,7 +271,7 @@ export default function UserProductsPage() {
                   <div className="flex justify-between items-center mb-4">
                     <p className="text-yellow-400 font-bold text-lg">{product.price}</p>
                     <div className="flex items-center text-sm text-gray-400">
-                      ⭐⭐⭐⭐⭐
+                      ???????????????
                     </div>
                   </div>
 
@@ -280,7 +280,7 @@ export default function UserProductsPage() {
                     className="w-full bg-yellow-500 text-black py-2 rounded-lg font-semibold hover:bg-yellow-400 transition flex items-center justify-center gap-2 border-0"
                   >
                     <span>Add to Cart</span>
-                    <span>🛒</span>
+                    <span>????</span>
                   </button>
                 </div>
               ))}
@@ -296,14 +296,14 @@ export default function UserProductsPage() {
           className="bg-[#2a2a2a] hover:bg-[#3a3a3a] text-white p-3 rounded-full shadow-lg transition"
           title="Back to top"
         >
-          ↑
+          ???
         </button>
         <button
           onClick={() => router.push('/user/cart')}
           className="bg-yellow-500 hover:bg-yellow-400 text-black p-3 rounded-full shadow-lg transition relative border-0"
           title="View Cart"
         >
-          🛒
+          ????
           {getCartCount() > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {getCartCount()}
