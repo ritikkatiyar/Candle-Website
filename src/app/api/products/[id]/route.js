@@ -4,7 +4,7 @@ import Product from '@/models/Product';
 export async function PUT(request, { params }) {
   try {
     await connectToDatabase();
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const product = await Product.findByIdAndUpdate(id, body, { new: true });
     if (!product) {
@@ -19,7 +19,7 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await connectToDatabase();
-    const { id } = params;
+    const { id } = await params;
     const product = await Product.findByIdAndDelete(id);
     if (!product) {
       return new Response(JSON.stringify({ error: 'Product not found' }), { status: 404 });

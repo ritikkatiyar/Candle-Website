@@ -29,6 +29,14 @@ export default function FeaturedProducts({refProp}) {
     }
   }, []);
 
+  const getProductImages = (product) => {
+    const list = [product.image, ...(product.images || [])].filter(Boolean);
+    return Array.from(new Set(list));
+  };
+
+  const getPrimaryImage = (product) => getProductImages(product)[0];
+  const getSecondaryImage = (product) => getProductImages(product)[1];
+
   const addToCart = (product) => {
     const existingItem = cart.find(item => item._id === product._id);
     let updatedCart;
@@ -61,13 +69,24 @@ export default function FeaturedProducts({refProp}) {
             key={item._id || index}
             className="bg-[#1a1a1a] hover:shadow-lg hover:scale-[1.02] transition-all duration-300 rounded-2xl overflow-hidden shadow-md flex flex-col items-center p-6 group"
           >
-            <Image
-              src={item.image}
-              alt={item.name}
-              width={250}
-              height={250}
-              className="rounded-xl object-cover mb-4 w-56 h-56"
-            />
+            <div className="relative overflow-hidden rounded-xl mb-4 w-56 h-56">
+              <Image
+                src={getPrimaryImage(item)}
+                alt={item.name}
+                width={250}
+                height={250}
+                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-100 group-hover:opacity-0"
+              />
+              {getSecondaryImage(item) && (
+                <Image
+                  src={getSecondaryImage(item)}
+                  alt={`${item.name} alternate`}
+                  width={250}
+                  height={250}
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100"
+                />
+              )}
+            </div>
 
             <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
             <p className="text-gray-300 text-sm mb-1">{item.price}</p>

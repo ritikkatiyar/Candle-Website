@@ -89,6 +89,14 @@ export default function UserProductsPage() {
     PRODUCT_TYPE_OPTIONS.find((option) => option.value === value)?.label || value
   );
 
+  const getProductImages = (product) => {
+    const list = [product.image, ...(product.images || [])].filter(Boolean);
+    return Array.from(new Set(list));
+  };
+
+  const getPrimaryImage = (product) => getProductImages(product)[0];
+  const getSecondaryImage = (product) => getProductImages(product)[1];
+
   const filterAndSortProducts = () => {
     let filtered = [...allProducts];
 
@@ -253,14 +261,23 @@ export default function UserProductsPage() {
                   key={product._id}
                   className="bg-[#1a1a1a] rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] group"
                 >
-                  <div className="relative overflow-hidden rounded-lg mb-4">
+                  <div className="relative overflow-hidden rounded-lg mb-4 h-48">
                     <Image
-                      src={product.image}
+                      src={getPrimaryImage(product)}
                       alt={product.name}
                       width={300}
                       height={300}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                      className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-100 group-hover:opacity-0"
                     />
+                    {getSecondaryImage(product) && (
+                      <Image
+                        src={getSecondaryImage(product)}
+                        alt={`${product.name} alternate`}
+                        width={300}
+                        height={300}
+                        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-0 group-hover:opacity-100"
+                      />
+                    )}
                     <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
                       {getProductTypeLabel(resolveProductType(product))}
                     </div>

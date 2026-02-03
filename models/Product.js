@@ -22,6 +22,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  images: {
+    type: [String],
+    default: [],
+  },
   category: {
     type: String,
     enum: ['featured', 'carousel', 'hero', 'collection'],

@@ -9,11 +9,12 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState([]);
   const [content, setContent] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [form, setForm] = useState({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED, productType: PRODUCT_TYPES.CANDLES });
+  const [form, setForm] = useState({ name: '', description: '', price: '', image: '', images: [], category: PRODUCT_CATEGORIES.FEATURED, productType: PRODUCT_TYPES.CANDLES });
   const [contentForm, setContentForm] = useState({ section: 'about', title: '', content: '', image: '', order: 0 });
   const [editingId, setEditingId] = useState(null);
   const [editingContentId, setEditingContentId] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -43,11 +44,25 @@ export default function AdminDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!selectedFile && !form.image) {
+      alert('Primary image is required.');
+      return;
+    }
+
     // Upload image if a file is selected
     let imageUrl = form.image;
     if (selectedFile) {
-      imageUrl = await uploadImage();
-      if (!imageUrl) return; // Stop if upload failed
+      const upload = await uploadImage(selectedFile);
+      if (!upload) return; // Stop if upload failed
+      imageUrl = upload;
+    }
+
+    let galleryUrls = form.images || [];
+    if (selectedFiles.length > 0) {
+      const uploads = await Promise.all(selectedFiles.map((file) => uploadImage(file)));
+      const validUploads = uploads.filter(Boolean);
+      if (validUploads.length === 0) return;
+      galleryUrls = validUploads;
     }
 
     const method = editingId ? 'PUT' : 'POST';
@@ -55,33 +70,39 @@ export default function AdminDashboard() {
     const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, image: imageUrl }),
+      body: JSON.stringify({ ...form, image: imageUrl, images: galleryUrls }),
     });
     if (res.ok) {
       fetchProducts();
-      setForm({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED, productType: PRODUCT_TYPES.CANDLES });
+      setForm({ name: '', description: '', price: '', image: '', images: [], category: PRODUCT_CATEGORIES.FEATURED, productType: PRODUCT_TYPES.CANDLES });
       setEditingId(null);
       setSelectedFile(null);
+      setSelectedFiles([]);
     }
   };
 
   const handleEdit = (product) => {
-    setForm({ ...product, productType: product.productType || PRODUCT_TYPES.CANDLES });
+    setForm({ ...product, images: product.images || [], productType: product.productType || PRODUCT_TYPES.CANDLES });
     setEditingId(product._id);
-    setSelectedFile(null); // Reset file selection when editing
+    setSelectedFile(null);
+    setSelectedFiles([]); // Reset file selection when editing
   };
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
 
-  const uploadImage = async () => {
-    if (!selectedFile) return null;
+  const handleGalleryFilesChange = (e) => {
+    setSelectedFiles(Array.from(e.target.files || []));
+  };
+
+  const uploadImage = async (file) => {
+    if (!file) return null;
 
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append('file', selectedFile);
+      formData.append('file', file);
 
       const res = await fetch('/api/upload', {
         method: 'POST',
@@ -249,10 +270,12 @@ export default function AdminDashboard() {
                 />
               )}
               <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Primary Image (required)</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
+                  required={!form.image}
                   className="p-2 border rounded w-full"
                 />
                 {selectedFile && (
@@ -262,6 +285,24 @@ export default function AdminDashboard() {
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600">Current image:</p>
                     <img src={form.image} alt="Current" className="w-20 h-20 object-cover rounded" />
+                  </div>
+                )}
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Gallery Images (optional, multiple)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleGalleryFilesChange}
+                  className="p-2 border rounded w-full"
+                />
+                {selectedFiles.length > 0 && (
+                  <p className="text-sm text-gray-600">Selected: {selectedFiles.length} file(s)</p>
+                )}
+                {form.images && form.images.length > 0 && selectedFiles.length === 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600">Current gallery: {form.images.length} image(s)</p>
                   </div>
                 )}
               </div>
@@ -304,7 +345,7 @@ export default function AdminDashboard() {
                   <div>
                     <h4 className="font-bold">{product.name}</h4>
                     <p>{product.description}</p>
-                    <p>{product.category === PRODUCT_CATEGORIES.HERO ? 'Display Image' : product.price} - {product.category} - {getProductTypeLabel(product.productType || PRODUCT_TYPES.CANDLES)}</p>
+                    <p>{product.category === PRODUCT_CATEGORIES.HERO ? 'Display Image' : product.price} - {product.category} - {getProductTypeLabel(product.productType || PRODUCT_TYPES.CANDLES)}{product.images && product.images.length > 0 ? ` - ${product.images.length} gallery` : ''}</p>
                   </div>
                   <div>
                     <button onClick={() => handleEdit(product)} className="mr-2 px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>

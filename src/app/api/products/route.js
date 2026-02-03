@@ -19,6 +19,7 @@ export async function POST(request) {
     await product.save();
     return new Response(JSON.stringify(product), { status: 201 });
   } catch (error) {
+    console.error('Failed to create product:', error);
     return new Response(JSON.stringify({ error: 'Failed to create product' }), { status: 500 });
   }
   
