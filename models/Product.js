@@ -8,11 +8,15 @@ const productSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
+    required: function () {
+      return !['hero', 'carousel'].includes(this.category);
+    },
   },
   price: {
     type: String,
-    required: true,
+    required: function () {
+      return !['hero', 'carousel'].includes(this.category);
+    },
   },
   image: {
     type: String,
@@ -21,6 +25,12 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: ['featured', 'carousel', 'hero', 'collection'],
+    required: true,
+  },
+  productType: {
+    type: String,
+    enum: ['candles', 'diffusers', 'gift-cards'],
+    default: 'candles',
     required: true,
   },
   createdAt: {

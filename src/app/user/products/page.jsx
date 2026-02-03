@@ -2,7 +2,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { PRODUCT_TYPES, PRODUCT_TYPE_OPTIONS } from "@/lib/constants";
 
 export default function UserProductsPage() {
   const [allProducts, setAllProducts] = useState([]);
@@ -10,10 +11,12 @@ export default function UserProductsPage() {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedType, setSelectedType] = useState("all");
   const [sortBy, setSortBy] = useState("name");
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const typeParam = searchParams.get("type");
 
   useEffect(() => {
     fetchProducts();
@@ -21,8 +24,17 @@ export default function UserProductsPage() {
   }, []);
 
   useEffect(() => {
+    const allowedTypes = new Set(Object.values(PRODUCT_TYPES));
+    if (!typeParam) {
+      setSelectedType('all');
+      return;
+    }
+    setSelectedType(allowedTypes.has(typeParam) ? typeParam : 'all');
+  }, [typeParam]);
+
+  useEffect(() => {
     filterAndSortProducts();
-  }, [allProducts, searchTerm, selectedCategory, sortBy]);
+  }, [allProducts, searchTerm, selectedType, sortBy]);
 
   const fetchProducts = async () => {
     try {
@@ -71,6 +83,12 @@ export default function UserProductsPage() {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const resolveProductType = (product) => product.productType || PRODUCT_TYPES.CANDLES;
+
+  const getProductTypeLabel = (value) => (
+    PRODUCT_TYPE_OPTIONS.find((option) => option.value === value)?.label || value
+  );
+
   const filterAndSortProducts = () => {
     let filtered = [...allProducts];
 
@@ -82,9 +100,9 @@ export default function UserProductsPage() {
       );
     }
 
-    // Category filter
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(product => product.category === selectedCategory);
+    // Type filter
+    if (selectedType !== "all") {
+      filtered = filtered.filter(product => resolveProductType(product) === selectedType);
     }
 
     // Sort
@@ -104,11 +122,6 @@ export default function UserProductsPage() {
     });
 
     setProducts(filtered);
-  };
-
-  const getCategories = () => {
-    const categories = [...new Set(allProducts.map(product => product.category))];
-    return categories;
   };
 
   const showNotification = (message) => {
@@ -185,29 +198,29 @@ export default function UserProductsPage() {
           {/* Filters */}
           {showFilters && (
             <div className="bg-[#2a2a2a] p-4 rounded-lg">
-              <h3 className="font-semibold mb-3">Filter by Category</h3>
+              <h3 className="font-semibold mb-3">Filter by Type</h3>
               <div className="flex flex-wrap gap-2">
                 <button
-                  onClick={() => setSelectedCategory("all")}
+                  onClick={() => setSelectedType("all")}
                   className={`px-3 py-1 rounded-full text-sm border-0 ${
-                    selectedCategory === "all"
+                    selectedType === "all"
                       ? 'bg-yellow-500 text-black'
                       : 'bg-[#3a3a3a] text-white hover:bg-[#4a4a4a]'
                   }`}
                 >
                   All
                 </button>
-                {getCategories().map(category => (
+                {PRODUCT_TYPE_OPTIONS.map((option) => (
                   <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
+                    key={option.value}
+                    onClick={() => setSelectedType(option.value)}
                     className={`px-3 py-1 rounded-full text-sm capitalize border-0 ${
-                      selectedCategory === category
+                      selectedType === option.value
                         ? 'bg-yellow-500 text-black'
                         : 'bg-[#3a3a3a] text-white hover:bg-[#4a4a4a]'
                     }`}
                   >
-                    {category}
+                    {option.label}
                   </button>
                 ))}
               </div>
@@ -230,7 +243,7 @@ export default function UserProductsPage() {
               <p className="text-gray-400">
                 Showing {products.length} product{products.length !== 1 ? 's' : ''}
                 {searchTerm && ` for "${searchTerm}"`}
-                {selectedCategory !== "all" && ` in ${selectedCategory}`}
+                {selectedType !== "all" && ` in ${getProductTypeLabel(selectedType)}`}
               </p>
             </div>
 
@@ -249,7 +262,7 @@ export default function UserProductsPage() {
                       className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                     <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                      {product.category}
+                      {getProductTypeLabel(resolveProductType(product))}
                     </div>
                   </div>
 

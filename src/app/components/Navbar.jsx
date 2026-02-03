@@ -1,17 +1,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ChevronDown } from "lucide-react";
+import { PRODUCT_TYPE_OPTIONS } from "@/lib/constants";
+
+const productSubMenu = [
+  { name: "All Products", link: "/user/products" },
+  ...PRODUCT_TYPE_OPTIONS.map((option) => ({
+    name: option.label,
+    link: `/user/products?type=${option.value}`,
+  })),
+];
 
 const navItems = [
   { name: "Home", link: "/" },
   {
     name: "Products",
-    subMenu: [
-      { name: "All Products", link: "/products" },
-      { name: "Candles", link: "/products/candles" },
-      { name: "Diffusers", link: "/products/diffusers" },
-      { name: "Gift Cards", link: "/products/gift-cards" },
-    ],
+    subMenu: productSubMenu,
   },
   { name: "About", link: "/about" },
   { name: "Contact", link: "/contact" },

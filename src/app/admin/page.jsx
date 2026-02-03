@@ -2,14 +2,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PRODUCT_CATEGORIES, ORDER_STATUSES } from '@/lib/constants';
+import { PRODUCT_CATEGORIES, PRODUCT_TYPES, PRODUCT_TYPE_OPTIONS, ORDER_STATUSES } from '@/lib/constants';
 
 export default function AdminDashboard() {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [content, setContent] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [form, setForm] = useState({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED });
+  const [form, setForm] = useState({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED, productType: PRODUCT_TYPES.CANDLES });
   const [contentForm, setContentForm] = useState({ section: 'about', title: '', content: '', image: '', order: 0 });
   const [editingId, setEditingId] = useState(null);
   const [editingContentId, setEditingContentId] = useState(null);
@@ -59,14 +59,14 @@ export default function AdminDashboard() {
     });
     if (res.ok) {
       fetchProducts();
-      setForm({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED });
+      setForm({ name: '', description: '', price: '', image: '', category: PRODUCT_CATEGORIES.FEATURED, productType: PRODUCT_TYPES.CANDLES });
       setEditingId(null);
       setSelectedFile(null);
     }
   };
 
   const handleEdit = (product) => {
-    setForm(product);
+    setForm({ ...product, productType: product.productType || PRODUCT_TYPES.CANDLES });
     setEditingId(product._id);
     setSelectedFile(null); // Reset file selection when editing
   };
@@ -155,6 +155,10 @@ export default function AdminDashboard() {
     fetchContent();
   };
 
+  const getProductTypeLabel = (value) => (
+    PRODUCT_TYPE_OPTIONS.find((opt) => opt.value === value)?.label || value
+  );
+
   const updateOrderStatus = async (orderId, status) => {
     // You can implement order status update API if needed
     console.log('Update order', orderId, 'to status', status);
@@ -223,16 +227,18 @@ export default function AdminDashboard() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="p-2 border rounded"
                 required
-              />
+              />              {![PRODUCT_CATEGORIES.CAROUSEL, PRODUCT_CATEGORIES.HERO].includes(form.category) && (
+
               <input
                 type="text"
                 placeholder="Description"
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="p-2 border rounded"
-                required={form.category !== PRODUCT_CATEGORIES.HERO}
+                required={![PRODUCT_CATEGORIES.CAROUSEL, PRODUCT_CATEGORIES.HERO].includes(form.category)}
               />
-              {form.category !== PRODUCT_CATEGORIES.HERO && (
+              )}
+              {![PRODUCT_CATEGORIES.CAROUSEL, PRODUCT_CATEGORIES.HERO].includes(form.category) && (
                 <input
                   type="text"
                   placeholder="Price"
@@ -269,6 +275,17 @@ export default function AdminDashboard() {
                 <option value={PRODUCT_CATEGORIES.HERO}>Hero</option>
                 <option value={PRODUCT_CATEGORIES.COLLECTION}>Collection</option>
               </select>
+              <select
+                value={form.productType}
+                onChange={(e) => setForm({ ...form, productType: e.target.value })}
+                className="p-2 border rounded"
+              >
+                {PRODUCT_TYPE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <button
               type="submit"
@@ -287,7 +304,7 @@ export default function AdminDashboard() {
                   <div>
                     <h4 className="font-bold">{product.name}</h4>
                     <p>{product.description}</p>
-                    <p>{product.category === PRODUCT_CATEGORIES.HERO ? 'Display Image' : product.price} - {product.category}</p>
+                    <p>{product.category === PRODUCT_CATEGORIES.HERO ? 'Display Image' : product.price} - {product.category} - {getProductTypeLabel(product.productType || PRODUCT_TYPES.CANDLES)}</p>
                   </div>
                   <div>
                     <button onClick={() => handleEdit(product)} className="mr-2 px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>

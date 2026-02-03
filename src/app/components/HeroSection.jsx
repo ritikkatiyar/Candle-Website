@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PRODUCT_CATEGORIES } from "@/lib/constants";
 
 const HeroSection = ({ onShopNowClick }) => {
-  const [products, setProducts] = useState([]);
+  //const [products, setProducts] = useState([]);
   const [carouselImages, setCarouselImages] = useState([]);
   const [index, setIndex] = useState(0);
 
@@ -15,9 +15,9 @@ const HeroSection = ({ onShopNowClick }) => {
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
 
-        // Filter featured products for the collections section
-        const featured = data.filter(p => p.category === 'featured');
-        setProducts(featured);
+        // // Filter featured products for the collections section
+        // const featured = data.filter(p => p.category === 'featured');
+        // setProducts(featured);
 
         // Filter hero images for the background
         const heroImages = data.filter(p => p.category === PRODUCT_CATEGORIES.HERO);
@@ -96,7 +96,7 @@ const HeroSection = ({ onShopNowClick }) => {
       </section>
 
       {/* Featured Collections */}
-      <section className="py-16 px-4 sm:px-8">
+      {/* <section className="py-16 px-4 sm:px-8">
         <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10">
           ✨ Featured Collections
         </h2>
@@ -121,7 +121,7 @@ const HeroSection = ({ onShopNowClick }) => {
   ))}
 </div>
 
-      </section>
+      </section> */}
     </div>
   );
 };
