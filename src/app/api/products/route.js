@@ -21,4 +21,5 @@ export async function POST(request) {
   } catch (error) {
     return new Response(JSON.stringify({ error: 'Failed to create product' }), { status: 500 });
   }
+  
 }
