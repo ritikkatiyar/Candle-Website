@@ -52,7 +52,7 @@ export default function CartPage() {
 
   const getTotalAmount = () => {
     return cart.reduce((total, item) => {
-      const price = parseFloat(item.price.replace('₹', '').replace(',', ''));
+      const price = parseFloat(item.price.replace('', '').replace(',', ''));
       return total + (price * item.quantity);
     }, 0);
   };
@@ -70,7 +70,7 @@ export default function CartPage() {
           image: item.image,
           quantity: item.quantity,
         })),
-        totalAmount: `₹${getTotalAmount().toFixed(2)}`,
+        totalAmount: `${getTotalAmount().toFixed(2)}`,
         shippingAddress: shippingInfo,
       };
 
@@ -114,122 +114,123 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-[#121212] text-white p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">🛒 Your Cart</h1>
+        <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Cart Items */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
-          {cart.map((item) => (
-            <div key={item._id} className="bg-[#1a1a1a] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center gap-3">
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={80}
-                height={80}
-                className="rounded-lg object-cover"
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Cart Items */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold mb-4">Cart Items</h2>
+            {cart.map((item) => (
+              <div key={item._id} className="bg-[#1a1a1a] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={80}
+                  height={80}
+                  className="rounded-lg object-cover"
+                />
+                <div className="flex-1">
+                  <h3 className="font-semibold">{item.name}</h3>
+                  <p className="text-gray-300">{item.price}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                    className="bg-gray-600 px-2 py-1 rounded hover:bg-gray-500"
+                  >
+                    -
+                  </button>
+                  <span className="w-8 text-center">{item.quantity}</span>
+                  <button
+                    onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                    className="bg-gray-600 px-2 py-1 rounded hover:bg-gray-500"
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  onClick={() => removeItem(item._id)}
+                  className="bg-red-600 px-3 py-1 rounded hover:bg-red-500 w-full sm:w-auto"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <h3 className="text-xl font-bold">Total: {getTotalAmount().toFixed(2)}</h3>
+            </div>
+          </div>
+
+          {/* Shipping Information */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
+            <div className="bg-[#1a1a1a] rounded-lg p-4 space-y-4">
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={shippingInfo.name}
+                onChange={(e) => setShippingInfo({ ...shippingInfo, name: e.target.value })}
+                className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+                required
               />
-              <div className="flex-1">
-                <h3 className="font-semibold">{item.name}</h3>
-                <p className="text-gray-300">{item.price}</p>
+              <input
+                type="email"
+                placeholder="Email"
+                value={shippingInfo.email}
+                onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
+                className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+                required
+              />
+              <input
+                type="tel"
+                placeholder="Phone"
+                value={shippingInfo.phone}
+                onChange={(e) => setShippingInfo({ ...shippingInfo, phone: e.target.value })}
+                className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+                required
+              />
+              <textarea
+                placeholder="Address"
+                value={shippingInfo.address}
+                onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
+                className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+                rows="3"
+                required
+              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="City"
+                  value={shippingInfo.city}
+                  onChange={(e) => setShippingInfo({ ...shippingInfo, city: e.target.value })}
+                  className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="State"
+                  value={shippingInfo.state}
+                  onChange={(e) => setShippingInfo({ ...shippingInfo, state: e.target.value })}
+                  className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+                  required
+                />
               </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                  className="bg-gray-600 px-2 py-1 rounded hover:bg-gray-500"
-                >
-                  -
-                </button>
-                <span className="w-8 text-center">{item.quantity}</span>
-                <button
-                  onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                  className="bg-gray-600 px-2 py-1 rounded hover:bg-gray-500"
-                >
-                  +
-                </button>
-              </div>
+              <input
+                type="text"
+                placeholder="Pincode"
+                value={shippingInfo.pincode}
+                onChange={(e) => setShippingInfo({ ...shippingInfo, pincode: e.target.value })}
+                className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+                required
+              />
               <button
-                onClick={() => removeItem(item._id)}
-                className="bg-red-600 px-3 py-1 rounded hover:bg-red-500 w-full sm:w-auto"
+                onClick={handlePlaceOrder}
+                disabled={isPlacingOrder}
+                className="w-full bg-yellow-500 text-black py-3 rounded-lg font-semibold hover:bg-yellow-400 transition disabled:opacity-50"
               >
-                Remove
+                {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
               </button>
             </div>
-          ))}
-          <div className="bg-[#1a1a1a] rounded-lg p-4">
-            <h3 className="text-xl font-bold">Total: ₹{getTotalAmount().toFixed(2)}</h3>
-          </div>
-        </div>
-
-        {/* Shipping Information */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
-          <div className="bg-[#1a1a1a] rounded-lg p-4 space-y-4">
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={shippingInfo.name}
-              onChange={(e) => setShippingInfo({ ...shippingInfo, name: e.target.value })}
-              className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
-              required
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              value={shippingInfo.email}
-              onChange={(e) => setShippingInfo({ ...shippingInfo, email: e.target.value })}
-              className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
-              required
-            />
-            <input
-              type="tel"
-              placeholder="Phone"
-              value={shippingInfo.phone}
-              onChange={(e) => setShippingInfo({ ...shippingInfo, phone: e.target.value })}
-              className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
-              required
-            />
-            <textarea
-              placeholder="Address"
-              value={shippingInfo.address}
-              onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
-              className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
-              rows="3"
-              required
-            />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="City"
-                value={shippingInfo.city}
-                onChange={(e) => setShippingInfo({ ...shippingInfo, city: e.target.value })}
-                className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
-                required
-              />
-              <input
-                type="text"
-                placeholder="State"
-                value={shippingInfo.state}
-                onChange={(e) => setShippingInfo({ ...shippingInfo, state: e.target.value })}
-                className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
-                required
-              />
-            </div>
-            <input
-              type="text"
-              placeholder="Pincode"
-              value={shippingInfo.pincode}
-              onChange={(e) => setShippingInfo({ ...shippingInfo, pincode: e.target.value })}
-              className="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
-              required
-            />
-            <button
-              onClick={handlePlaceOrder}
-              disabled={isPlacingOrder}
-              className="w-full bg-yellow-500 text-black py-3 rounded-lg font-semibold hover:bg-yellow-400 transition disabled:opacity-50"
-            >
-              {isPlacingOrder ? 'Placing Order...' : 'Place Order'}
-            </button>
           </div>
         </div>
       </div>
