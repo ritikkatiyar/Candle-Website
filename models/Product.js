@@ -9,13 +9,13 @@ const productSchema = new mongoose.Schema({
   description: {
     type: String,
     required: function () {
-      return !['hero', 'carousel'].includes(this.category);
+      return true;
     },
   },
   price: {
     type: String,
     required: function () {
-      return !['hero', 'carousel'].includes(this.category);
+      return true;
     },
   },
   image: {
@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['featured', 'carousel', 'hero', 'collection'],
+    enum: ['featured', 'collection'],
     required: true,
   },
   productType: {

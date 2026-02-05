@@ -2,8 +2,8 @@ import { Mail, Phone, Instagram, Youtube, MessageCircle } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0d0d0d] backdrop-blur-lg text-white px-6 sm:px-10 py-12 mt-20 rounded-t-3xl border-t border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-      <div className="max-w-6xl mx-auto grid gap-10 sm:grid-cols-2 md:grid-cols-3">
+    <footer id="contact" className="bg-[#0d0d0d] backdrop-blur-lg text-white px-4 sm:px-10 py-12 mt-20 rounded-t-3xl border-t border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+      <div className="max-w-6xl mx-auto grid gap-8 sm:gap-10 sm:grid-cols-2 md:grid-cols-3">
         {/* Business Info */}
         <div>
           <h2 className="text-2xl font-bold mb-4 text-white">Anaya Candles</h2>

@@ -186,33 +186,33 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div>
+    <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">📊 Admin Dashboard</h1>
 
       {/* Tab Navigation */}
       <div className="mb-6">
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`px-4 py-2 rounded ${activeTab === 'dashboard' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
+            className={`px-3 sm:px-4 py-2 rounded text-sm sm:text-base ${activeTab === 'dashboard' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
           >
             Dashboard
           </button>
           <button
             onClick={() => setActiveTab('products')}
-            className={`px-4 py-2 rounded ${activeTab === 'products' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
+            className={`px-3 sm:px-4 py-2 rounded text-sm sm:text-base ${activeTab === 'products' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
           >
             Products
           </button>
           <button
             onClick={() => setActiveTab('orders')}
-            className={`px-4 py-2 rounded ${activeTab === 'orders' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
+            className={`px-3 sm:px-4 py-2 rounded text-sm sm:text-base ${activeTab === 'orders' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
           >
             Orders
           </button>
           <button
             onClick={() => setActiveTab('content')}
-            className={`px-4 py-2 rounded ${activeTab === 'content' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
+            className={`px-3 sm:px-4 py-2 rounded text-sm sm:text-base ${activeTab === 'content' ? 'bg-yellow-500 text-black' : 'bg-gray-700 text-white'}`}
           >
             Content
           </button>
@@ -247,8 +247,7 @@ export default function AdminDashboard() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="p-2 border rounded"
-                required
-              />              {![PRODUCT_CATEGORIES.CAROUSEL, PRODUCT_CATEGORIES.HERO].includes(form.category) && (
+                />              {(
 
               <input
                 type="text"
@@ -256,10 +255,10 @@ export default function AdminDashboard() {
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="p-2 border rounded"
-                required={![PRODUCT_CATEGORIES.CAROUSEL, PRODUCT_CATEGORIES.HERO].includes(form.category)}
+                required
               />
               )}
-              {![PRODUCT_CATEGORIES.CAROUSEL, PRODUCT_CATEGORIES.HERO].includes(form.category) && (
+              {(
                 <input
                   type="text"
                   placeholder="Price"
@@ -312,9 +311,7 @@ export default function AdminDashboard() {
                 className="p-2 border rounded"
               >
                 <option value={PRODUCT_CATEGORIES.FEATURED}>Featured</option>
-                <option value={PRODUCT_CATEGORIES.CAROUSEL}>Carousel</option>
-                <option value={PRODUCT_CATEGORIES.HERO}>Hero</option>
-                <option value={PRODUCT_CATEGORIES.COLLECTION}>Collection</option>
+                                                <option value={PRODUCT_CATEGORIES.COLLECTION}>Collection</option>
               </select>
               <select
                 value={form.productType}
@@ -331,7 +328,7 @@ export default function AdminDashboard() {
             <button
               type="submit"
               disabled={uploading}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
+              className="mt-4 w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-400"
             >
               {uploading ? 'Uploading...' : (editingId ? 'Update' : 'Add') + ' Product'}
             </button>
@@ -341,14 +338,14 @@ export default function AdminDashboard() {
             <h3 className="text-xl font-semibold mb-4">Products</h3>
             <div className="space-y-4">
               {products.map((product) => (
-                <div key={product._id} className="flex justify-between items-center p-4 border rounded">
+                <div key={product._id} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 border rounded">
                   <div>
                     <h4 className="font-bold">{product.name}</h4>
                     <p>{product.description}</p>
-                    <p>{product.category === PRODUCT_CATEGORIES.HERO ? 'Display Image' : product.price} - {product.category} - {getProductTypeLabel(product.productType || PRODUCT_TYPES.CANDLES)}{product.images && product.images.length > 0 ? ` - ${product.images.length} gallery` : ''}</p>
+                    <p>{product.price} - {product.category} - {getProductTypeLabel(product.productType || PRODUCT_TYPES.CANDLES)}{product.images && product.images.length > 0 ? ` - ${product.images.length} gallery` : ''}</p>
                   </div>
-                  <div>
-                    <button onClick={() => handleEdit(product)} className="mr-2 px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>
+                  <div className="flex flex-wrap gap-2 w-full sm:w-auto sm:justify-end">
+                    <button onClick={() => handleEdit(product)} className="px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>
                     <button onClick={() => handleDelete(product._id)} className="px-3 py-1 bg-red-500 text-white rounded">Delete</button>
                   </div>
                 </div>
@@ -366,7 +363,7 @@ export default function AdminDashboard() {
             <div className="space-y-4">
               {orders.map((order) => (
                 <div key={order._id} className="p-4 border rounded">
-                  <div className="flex justify-between items-start mb-2">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
                     <div>
                       <h4 className="font-bold">Order #{order._id.slice(-8)}</h4>
                       <p className="text-sm text-gray-600">Customer: {order.userId?.name} ({order.userId?.email})</p>
@@ -397,7 +394,7 @@ export default function AdminDashboard() {
                     <p className="text-sm">{order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.pincode}</p>
                     <p className="text-sm">{order.shippingAddress?.email} | {order.shippingAddress?.phone}</p>
                   </div>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-wrap gap-2">
                     <select
                       value={order.status}
                       onChange={(e) => updateOrderStatus(order._id, e.target.value)}
@@ -431,8 +428,8 @@ export default function AdminDashboard() {
                 value={contentForm.section}
                 onChange={(e) => setContentForm({ ...contentForm, section: e.target.value })}
                 className="p-2 border rounded"
-                required
-              >
+                >
+                <option value="hero">Hero</option>
                 <option value="about">About Section</option>
                 <option value="story">Our Story</option>
                 <option value="features">Features</option>
@@ -457,15 +454,13 @@ export default function AdminDashboard() {
                 value={contentForm.title}
                 onChange={(e) => setContentForm({ ...contentForm, title: e.target.value })}
                 className="w-full p-2 border rounded"
-                required
-              />
+                />
               <textarea
                 placeholder="Content"
                 value={contentForm.content}
                 onChange={(e) => setContentForm({ ...contentForm, content: e.target.value })}
                 className="w-full p-2 border rounded h-32"
-                required
-              />
+                />
               <div>
                 <input
                   type="file"
@@ -499,7 +494,7 @@ export default function AdminDashboard() {
             <div className="space-y-4">
               {content.map((item) => (
                 <div key={item._id} className="p-4 border rounded">
-                  <div className="flex justify-between items-start mb-2">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm font-medium">
@@ -513,7 +508,7 @@ export default function AdminDashboard() {
                         <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded mt-2" />
                       )}
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                       <button
                         onClick={() => handleContentEdit(item)}
                         className="px-3 py-1 bg-yellow-500 text-white rounded text-sm"

@@ -8,15 +8,15 @@ const ContentSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: true
+    required: false
   },
   content: {
     type: String,
-    required: true
+    required: false
   },
   image: {
     type: String,
-    default: null
+    required: false
   },
   order: {
     type: Number,

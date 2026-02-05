@@ -43,7 +43,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-[#1a1a1a] rounded-lg p-8 shadow-xl relative">
+      <div className="max-w-md w-full bg-[#1a1a1a] rounded-lg p-6 sm:p-8 shadow-xl relative">
         <button
           onClick={() => router.push('/')}
           className="absolute top-4 left-4 text-gray-400 hover:text-yellow-500 transition-colors duration-200"
@@ -52,7 +52,7 @@ export default function ForgotPassword() {
           <FaHome size={20} />
         </button>
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-yellow-500 mb-2">🕯️ Anaya Candles</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-yellow-500 mb-2">🕯️ Anaya Candles</h1>
           <h2 className="text-xl font-semibold">Forgot Password</h2>
           <p className="text-gray-400 mt-2">Enter your email to reset your password</p>
         </div>

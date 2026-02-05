@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { FaUserAlt, FaLock, FaHome } from "react-icons/fa";
 
 export default function LoginPage() {
@@ -42,7 +43,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 px-4 sm:px-6 md:px-8">
-      <div className="w-full max-w-md bg-gray-900 shadow-xl rounded-2xl p-8 space-y-6 border border-gray-700 relative">
+      <div className="w-full max-w-md bg-gray-900 shadow-xl rounded-2xl p-6 sm:p-8 space-y-6 border border-gray-700 relative">
         <button
           onClick={() => router.push('/')}
           className="absolute top-4 left-4 text-gray-400 hover:text-[#f0b101] transition-colors duration-200"
@@ -50,10 +51,24 @@ export default function LoginPage() {
         >
           <FaHome size={20} />
         </button>
-        <h2 className="text-4xl font-extrabold text-center text-[#f0b101]">Login</h2>
-        <p className="text-center text-gray-400 text-lg">Access your dashboard</p>
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-[#f0b101]">Login</h2>
+        <p className="text-center text-gray-400 text-base sm:text-lg">Access your dashboard</p>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+                <button
+          type="button"
+          onClick={() => signIn("google", { callbackUrl: "/user" })}
+          className="w-full bg-white text-black py-3 rounded-lg font-semibold shadow-lg hover:bg-gray-200 transition-colors"
+        >
+          Continue with Google
+        </button>
+
+        <div className="flex items-center gap-3">
+          <div className="h-px bg-gray-700 flex-1"></div>
+          <span className="text-gray-500 text-sm">or</span>
+          <div className="h-px bg-gray-700 flex-1"></div>
+        </div>
+
+<form onSubmit={handleLogin} className="space-y-4">
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
               <p className="text-red-400 text-sm text-center">{error}</p>

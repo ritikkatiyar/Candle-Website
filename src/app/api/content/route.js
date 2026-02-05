@@ -43,8 +43,8 @@ export async function POST(request) {
 
     const { section, title, content, image, order } = await request.json();
 
-    if (!section || !title || !content) {
-      return NextResponse.json({ error: "Section, title, and content are required" }, { status: 400 });
+    if (!section) {
+      return NextResponse.json({ error: "Section is required" }, { status: 400 });
     }
 
     const newContent = new Content({

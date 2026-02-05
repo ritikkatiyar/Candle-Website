@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { PRODUCT_CATEGORIES } from "@/lib/constants";
 
 const HeroSection = ({ onShopNowClick }) => {
   //const [products, setProducts] = useState([]);
@@ -9,28 +8,19 @@ const HeroSection = ({ onShopNowClick }) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchHeroContent = async () => {
       try {
-        const res = await fetch('/api/products');
+        const res = await fetch('/api/content?section=hero');
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
-
-        // // Filter featured products for the collections section
-        // const featured = data.filter(p => p.category === 'featured');
-        // setProducts(featured);
-
-        // Filter hero images for the background
-        const heroImages = data.filter(p => p.category === PRODUCT_CATEGORIES.HERO);
-        const imageUrls = heroImages.map(p => p.image).filter(img => img);
+        const imageUrls = data.map(item => item.image).filter(Boolean);
         setCarouselImages(imageUrls);
-
       } catch (error) {
-        console.error('Error fetching products:', error);
-        // No fallback images - carousel will be empty if API fails
+        console.error('Error fetching hero content:', error);
         setCarouselImages([]);
       }
     };
-    fetchProducts();
+    fetchHeroContent();
 
     // Set up interval for carousel, but only if we have images
     const interval = setInterval(() => {
@@ -48,7 +38,7 @@ const HeroSection = ({ onShopNowClick }) => {
   return (
     <div className="font-serif bg-[#121212] text-white">
       {/* Hero Banner */}
-      <section className="relative w-full h-[60vh] sm:h-screen flex items-center justify-center text-center px-4 overflow-hidden">
+      <section className="relative w-full min-h-[70vh] sm:min-h-screen flex items-center justify-center text-center px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Image Carousel */}
         <div className="absolute inset-0">
           {carouselImages.length > 1 ? (
@@ -82,13 +72,13 @@ const HeroSection = ({ onShopNowClick }) => {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-3xl">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight">
+        <div className="relative z-10 max-w-3xl px-2">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight">
             Handcrafted Candles <br /> for Every Moment
           </h1>
           <button
             onClick={onShopNowClick}
-            className="mt-6 px-6 py-3 bg-yellow-500 text-black font-semibold rounded-full shadow-lg hover:bg-yellow-400 transition-all duration-300"
+            className="mt-6 w-full sm:w-auto px-6 py-3 bg-yellow-500 text-black font-semibold rounded-full shadow-lg hover:bg-yellow-400 transition-all duration-300"
           >
             🛍️ Shop Now
           </button>

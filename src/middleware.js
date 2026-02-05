@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { getToken } from "next-auth/jwt";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -20,21 +21,29 @@ export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
-    if (!token) {
+    let user = null;
+
+    if (token) {
+      try {
+        user = await verifyToken(token);
+      } catch (err) {
+        console.log("Error Occurred", err);
+      }
+    }
+
+    if (!user) {
+      const nextAuthToken = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+      if (nextAuthToken) {
+        user = nextAuthToken;
+      }
+    }
+
+    if (!user) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    try {
-      const user =await verifyToken(token);
-
-      if (pathname.startsWith("/admin") && user.role !== "admin") {
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
-      }
-
-      // pass if user is okay
-    } catch (err) {
-      console.log("Error Occurred",err)
-      return NextResponse.redirect(new URL("/login", request.url));
+    if (pathname.startsWith("/admin") && user.role !== "admin") {
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
   }
 
