@@ -78,7 +78,7 @@ const HeroSection = ({ onShopNowClick }) => {
           </h1>
           <button
             onClick={onShopNowClick}
-            className="mt-6 w-full sm:w-auto px-6 py-3 bg-yellow-500 text-black font-semibold rounded-full shadow-lg hover:bg-yellow-400 transition-all duration-300"
+            className="mt-6 w-full sm:w-auto px-6 py-3 rounded-full font-semibold text-black border border-black/10 bg-gradient-to-b from-white/88 via-white/78 to-white/70 shadow-[0_8px_20px_rgba(0,0,0,0.18)] backdrop-blur-sm hover:from-white/92 hover:via-white/82 hover:to-white/74 transition-all duration-300"
           >
             🛍️ Shop Now
           </button>
