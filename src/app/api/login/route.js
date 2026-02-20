@@ -21,9 +21,13 @@ export async function POST(req){
     const res=NextResponse.json({message:"Login successful",
         role:user.role,
     });
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieDomain = process.env.COOKIE_DOMAIN;
     res.cookies.set('token',token,{
         httpOnly:true,
-        secure:process.env.NODE_ENV==='production',
+        secure:isProduction,
+        sameSite:isProduction ? 'none' : 'lax',
+        ...(cookieDomain ? { domain: cookieDomain } : {}),
         path:'/',
         maxAge:7*24*60*60,//7days
     });

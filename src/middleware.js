@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { getToken } from "next-auth/jwt";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const AUTH_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET;
 
 async function verifyToken(token) {
   try {
-    const secret = new TextEncoder().encode(JWT_SECRET);
-    const { payload } = await jwtVerify(token, secret);
+    if (!AUTH_SECRET) return null;
+    const secret = new TextEncoder().encode(AUTH_SECRET);
+    const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
     return payload; // payload contains the decoded user object
   } catch (err) {
     console.error("Token verification failed:", err);
@@ -32,7 +33,10 @@ export async function middleware(request) {
     }
 
     if (!user) {
-      const nextAuthToken = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+      const nextAuthToken = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET,
+      });
       if (nextAuthToken) {
         user = nextAuthToken;
       }
